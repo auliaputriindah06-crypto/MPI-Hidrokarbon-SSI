@@ -1,0 +1,1654 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multimedia Pembelajaran Hidrokarbon</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    * { font-family: 'Poppins', sans-serif; }
+    
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; }
+    
+    .sidebar { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .sidebar.collapsed { transform: translateX(-100%); width: 0; opacity: 0; }
+    
+    @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    @keyframes floating-shapes { 0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; } 50% { transform: translateY(-20px) rotate(10deg); opacity: 0.2; } }
+    @keyframes atom-glow { 0%, 100% { filter: drop-shadow(0 0 8px currentColor); } 50% { filter: drop-shadow(0 0 15px currentColor); } }
+    @keyframes avatar-pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(192, 132, 250, 0.5), 0 0 40px rgba(192, 132, 250, 0.3); } 50% { box-shadow: 0 0 40px rgba(192, 132, 250, 0.8), 0 0 60px rgba(192, 132, 250, 0.5); } }
+    @keyframes avatar-outer-pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.15); } }
+    @keyframes avatar-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+    @keyframes floating-card-entrance { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes card-shimmer { 0%, 100% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+    @keyframes card-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
+    
+    .animate-blob { animation: blob 7s infinite; }
+    .animation-delay-2000 { animation-delay: 2s; }
+    .animation-delay-4000 { animation-delay: 4s; }
+
+    .content-slide { animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .reveal-animation { animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .animate-fadeIn { animation: fadeIn 0.5s ease; }
+    
+    .tab-btn { transition: all 0.3s ease; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+    .tab-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateX(5px); }
+    .tab-btn.active { background: rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3); border-left: 4px solid #FFD93D; }
+    
+    .gradient-text { background: linear-gradient(135deg, #667eea, #764ba2, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 1000; }
+    .modal-overlay.show { display: flex; align-items: center; justify-content: center; }
+    
+    .modal-content { background: white; border-radius: 2xl; padding: 2rem; max-width: 600px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.15); position: relative; max-height: 85vh; overflow-y: auto; animation: slideUp 0.4s ease; }
+    
+    .modal-close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f3f4f6; cursor: pointer; transition: all 0.3s; }
+    .modal-close:hover { background: #e5e7eb; transform: rotate(90deg); }
+    
+    .flip-card-wrapper { perspective: 1200px; cursor: pointer; height: 420px; width: 100%; display: flex; align-items: center; justify-content: center; }
+    .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-style: preserve-3d; transform: rotateY(0deg); }
+    .flip-card-wrapper.flipped .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-side { position: absolute; width: 100%; height: 100%; top: 0; left: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 24px; overflow: hidden; }
+    .flip-card-front { z-index: 10; transform: rotateY(0deg); }
+    .flip-card-back { z-index: 9; transform: rotateY(180deg); }
+    .flip-card-back .scrollable-content { overflow-y: auto; scroll-behavior: smooth; }
+    
+    .accordion-item { background: white; border-radius: 1.5rem; overflow: hidden; border: 2px solid rgba(102,126,234,0.2); margin-bottom: 1rem; }
+    .accordion-header { width: 100%; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); }
+    .accordion-header:hover { background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)); }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .accordion-content.open { max-height: 2000px; }
+    
+    .decoration-circle { animation: floating-shapes 8s ease-in-out infinite; }
+    .decoration-square { animation: floating-shapes 10s ease-in-out infinite 1s; }
+    .decoration-triangle { animation: floating-shapes 12s ease-in-out infinite 2s; }
+
+    @keyframes arrow-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+    .timeline-arrow { animation: arrow-pulse 1.5s ease-in-out infinite; }
+
+    /* Carbon SVG Styles */
+    .carbon-container { font-family: sans-serif; text-align: center; color: #333; }
+    .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-top: 32px; }
+    .carbon-label { border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; color: white; transition: 0.3s; font-size: 11px; }
+    .carbon-label:hover { transform: translateY(-2px); opacity: 0.9; }
+    .deg-label { font-size: 14px; margin-bottom: 2px; font-weight: 700; }
+    .primer { background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 2px 8px rgba(251,191,36,.3); }
+    .sekunder { background: linear-gradient(135deg, #34d399, #10b981); box-shadow: 0 2px 8px rgba(52,211,153,.3); }
+    .tersier { background: linear-gradient(135deg, #60a5fa, #3b82f6); box-shadow: 0 2px 8px rgba(96,165,250,.3); }
+    .kuarterner { background: linear-gradient(135deg, #a78bfa, #8b5cf6); box-shadow: 0 2px 8px rgba(167,139,250,.3); }
+    .svg-box { background: white; border-radius: 20px; padding: 30px; display: flex; justify-content: center; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+    .carbon-atom { stroke: #2c3e50; stroke-width: 3; transition: all 0.3s ease; cursor: pointer; }
+    .bond { stroke: #2c3e50; stroke-width: 4; }
+    .carbon-atom.active { animation: atom-glow 1s ease-in-out infinite; stroke: #fff; stroke-width: 4; filter: drop-shadow(0 0 20px currentColor) drop-shadow(0 0 35px rgba(255,255,255,0.8)); }
+    #carbon-explanation { padding: 25px; background: linear-gradient(135deg, #f8f9fa, #e8f4f8); border-radius: 15px; border-left: 5px solid #FFD93D; min-height: 100px; text-align: left; display: none; animation: slideUp 0.4s ease; }
+    #carbon-explanation.show { display: block; }
+    
+    /* Tambahan CSS untuk Highlight Tombol Aktif */
+    .carbon-label.active-btn {
+      transform: scale(1.15) translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 0 4px #ffffff, 0 0 0 7px rgba(0,0,0,0.1);
+      z-index: 10;
+      position: relative;
+      filter: brightness(1.1);
+    }
+    
+    /* Floating Fact Card PREMIUM UNIQUE DESIGN */
+    .floating-card-rectangular {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(147, 51, 234, 0.25), 0 0 40px rgba(236, 72, 153, 0.15);
+      display: flex;
+      flex-direction: column;
+      animation: floating-card-entrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: linear-gradient(135deg, #6d28d9, #9333ea, #c084fc);
+      border: 3px solid rgba(196, 132, 252, 0.6);
+      position: relative;
+    }
+    
+    .floating-card-rectangular::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+      animation: card-shimmer 3s infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* --- DESAIN TOMBOL BARU YANG LEBIH WOW (Misteri Sungai Berbusa) --- */
+    @keyframes shimmer-flow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card-rect-header {
+      /* Background Animasi: Deep Indigo -> Purple -> Pink -> Magenta */
+      background: linear-gradient(-45deg, #312e81, #6d28d9, #be185d, #4c1d95);
+      background-size: 400% 400%;
+      animation: shimmer-flow 8s ease infinite;
+      
+      color: white;
+      padding: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek membal halus */
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(49, 46, 129, 0.5);
+    }
+    
+    /* Pola Pattern Halus di atas Background */
+    .card-rect-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card-rect-header:hover {
+      transform: scale(1.02) translateY(-2px); /* Membesar sedikit saat hover */
+      box-shadow: 0 20px 50px -10px rgba(190, 24, 93, 0.6); /* Shadow pink menyala */
+      padding-left: 35px; /* Sedikit geser ke kanan */
+      z-index: 10;
+    }
+    
+    .card-rect-header-content {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex: 1;
+      position: relative;
+      z-index: 2;
+    }
+    
+    /* Desain Ikon Baru: Glassmorphism Circle */
+    .card-rect-icon {
+      font-size: 40px;
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      
+      transition: transform 0.5s ease, background 0.3s;
+      animation: none; /* Reset animasi bounce lama */
+    }
+
+    .card-rect-header:hover .card-rect-icon {
+      transform: rotate(10deg) scale(1.1);
+      background: rgba(255, 255, 255, 0.2);
+      border-color: white;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+    
+    .card-rect-text {
+      flex: 1;
+    }
+    
+    .card-rect-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: white;
+      margin: 0;
+      text-transform: uppercase; /* Huruf Kapital Semua */
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      line-height: 1.2;
+    }
+    
+    .card-rect-subtitle {
+      font-size: 12px;
+      color: #e0e7ff; /* Putih kebiruan */
+      margin: 8px 0 0 0;
+      font-weight: 600;
+      
+      /* Desain Pil Transparan */
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* Tombol Panah Baru: Lingkaran Putih */
+    .card-rect-expand {
+      font-size: 20px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: #4c1d95; /* Ungu gelap */
+      border-radius: 50%;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .card-rect-header:hover .card-rect-expand {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+
+    .card-rect-expand.open {
+      transform: rotate(180deg) scale(1.1);
+      background: #fce7f3; /* Pink sangat muda */
+      color: #be185d;
+    }
+    
+    .card-rect-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .card-rect-body.open {
+      /* DIPERBAIKI: Nilai dinaikkan dari 2000px menjadi 8000px agar konten panjang tidak terpotong */
+      max-height: 8000px; 
+      padding: 28px;
+    }
+    
+    .card-rect-content {
+      background: linear-gradient(135deg, #f5f3ff, #faf5ff);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .card-rect-content::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(168, 85, 247, 0.05), transparent);
+      pointer-events: none;
+    }
+    
+    .river-section {
+      padding: 20px;
+      border-bottom: 2px solid rgba(168, 85, 247, 0.2);
+      transition: all 0.3s;
+      background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(248,245,255,0.9));
+      position: relative;
+    }
+    
+    .river-section:last-child {
+      border-bottom: none;
+    }
+    
+    .river-section:hover {
+      background: linear-gradient(135deg, rgba(255,255,255,1), rgba(243,232,255,1));
+      transform: translateX(4px);
+    }
+    
+    .river-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+    
+    .river-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #6d28d9;
+      margin: 0 0 10px 0;
+      letter-spacing: 0.5px;
+    }
+    
+    .river-text {
+      font-size: 14px;
+      color: #4c1d95;
+      line-height: 1.7;
+      margin: 0;
+      font-weight: 500;
+    }
+    
+    .river-highlight {
+      background: linear-gradient(120deg, #e9d5ff, #ddd6fe);
+      padding: 14px;
+      border-radius: 12px;
+      border-left: 5px solid #a855f7;
+      margin-top: 10px;
+      font-weight: 700;
+      color: #5b21b6;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
+    }
+    
+    .solution-box {
+      background: linear-gradient(135deg, #f3e8ff, #ede9fe);
+      border: 3px solid #a855f7;
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 18px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.2);
+    }
+    
+    .solution-box-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #6d28d9;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    
+    .solution-box-text {
+      font-size: 14px;
+      color: #5b21b6;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    /* Timeline Redesign - UPDATED FOR INTERACTIVITY */
+    .timeline-roadmap { position: relative; }
+    .timeline-nodes { display: flex; justify-content: space-around; align-items: center; position: relative; gap: 8px; }
+    .timeline-node { position: relative; display: flex; flex-direction: column; align-items: center; z-index: 10; flex: 1; }
+    
+    /* Animasi agar tombol terlihat "hidup" */
+    @keyframes node-breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .timeline-node-circle { 
+      width: 65px; 
+      height: 65px; 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 32px; 
+      cursor: pointer; 
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efek membal yang enak */
+      border: 4px solid white; 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+      position: relative;
+      /* Terapkan animasi breathe ke semua node */
+      animation: node-breathe 3s ease-in-out infinite;
+    }
+    
+    /* Efek saat Disorot (Hover) - Lebih Mencolok */
+    .timeline-node-circle:hover { 
+      transform: scale(1.25) translateY(-5px) !important; /* Paksa scale lebih besar */
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 0 6px rgba(255,255,255,0.4); /* Efek Ring */
+      z-index: 20;
+      filter: brightness(1.1);
+    }
+    
+    /* Efek saat Diklik (Active) */
+    .timeline-node-circle:active {
+      transform: scale(0.95) !important;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    /* Highlight khusus untuk node tengah tetap spesial */
+    .timeline-node.highlight .timeline-node-circle { 
+      width: 80px; 
+      height: 80px; 
+      font-size: 40px; 
+      box-shadow: 0 0 0 5px rgba(236, 72, 153, 0.3), 0 15px 40px rgba(236, 72, 153, 0.5); 
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; /* Tetap pakai pulse untuk yang tengah */
+    }
+    
+    /* Timpa animasi hover untuk highlight node */
+    .timeline-node.highlight .timeline-node-circle:hover {
+      animation: none; /* Matikan pulse saat hover agar tidak konflik */
+      transform: scale(1.2) translateY(-5px);
+    }
+    
+    .timeline-label { margin-top: 12px; text-align: center; }
+    .timeline-label-title { font-weight: 700; font-size: 13px; color: #1f2937; }
+    .timeline-label-sub { font-size: 11px; color: #6b7280; margin-top: 2px; }
+    .timeline-label-badge { display: inline-block; background: linear-gradient(135deg, #ec4899, #be185d); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-top: 6px; }
+    .timeline-arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 24px; animation: arrow-pulse 1.5s ease-in-out infinite; }
+    .timeline-info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 24px; }
+    .timeline-info-card { background: white; border-radius: 12px; padding: 14px; border-left: 4px solid; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.3s; font-size: 12px; }
+    .timeline-info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .timeline-info-card.phase1 { border-left-color: #f97316; }
+    .timeline-info-card.phase2 { border-left-color: #ec4899; }
+    .timeline-info-card.phase3 { border-left-color: #10b981; }
+    .timeline-info-title { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+    .timeline-info-text { font-size: 11px; color: #6b7280; line-height: 1.4; }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full m-0 p-0 overflow-auto" style="background: linear-gradient(135deg, #e8f4f8 0%, #ffffff 100%);">
+  <div id="app" class="h-full w-full flex flex-col"><!-- Main Container -->
+   <div class="flex flex-1 overflow-hidden"><!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar w-72 md:w-80 flex-shrink-0 flex flex-col overflow-hidden" style="background: linear-gradient(180deg, rgba(102,126,234,0.95), rgba(118,75,162,0.95));">
+     <div class="p-5 bg-gradient-to-br from-white/15 to-white/5 border-b border-white/10 flex-shrink-0">
+      <h2 class="text-lg font-bold text-white flex items-center gap-2">📖 Mengenal Senyawa Hidrokarbon</h2>
+      <p class="text-white/70 text-sm mt-2">Pilih topik untuk dipelajari</p>
+     </div>
+     <nav class="flex-1 overflow-y-auto p-4 space-y-3"><button data-tab="1" class="tab-btn active w-full p-4 rounded-2xl text-left text-white flex items-center gap-3 group"> <span class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl text-2xl shadow-lg group-hover:scale-110 transition-transform">💎</span>
+       <div><span class="font-semibold block">Fenomena</span> <span class="text-sm text-white/70">Intan vs Arang</span>
+       </div></button> <button data-tab="2" class="tab-btn w-full p-4 rounded-2xl text-left text-white flex items-center gap-3 group"> <span class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl text-2xl shadow-lg group-hover:scale-110 transition-transform">📜</span>
+       <div><span class="font-semibold block">Sejarah</span> <span class="text-sm text-white/70">Mitos Vital Force</span>
+       </div></button> <button data-tab="3" class="tab-btn w-full p-4 rounded-2xl text-left text-white flex items-center gap-3 group"> <span class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-green-400 to-teal-500 rounded-xl text-2xl shadow-lg group-hover:scale-110 transition-transform">⚛️</span>
+       <div><span class="font-semibold block">Konsep</span> <span class="text-sm text-white/70">Kekhasan Atom Karbon</span>
+       </div></button>
+     </nav>
+     <div class="p-4 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-2xl border border-yellow-400/30 m-4 flex-shrink-0">
+      <h3 class="text-white font-semibold flex items-center gap-2 mb-2">💡 Tahukah Kamu?</h3>
+      <p class="text-white/80 text-sm leading-relaxed">Tubuh manusia mengandung sekitar 18% atom karbon - menjadikan karbon elemen terpenting kedua setelah oksigen!</p>
+     </div>
+    </aside><!-- Main Content Wrapper -->
+    <div class="w-full flex flex-col flex-1 overflow-hidden"><!-- Top Header - MOVED INSIDE CONTENT WRAPPER -->
+     <header class="w-full py-4 px-5 relative overflow-visible flex-shrink-0 z-20" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A8FF 50%, #7FD8BE 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); margin-bottom: 5px;">
+      <div class="relative z-10 flex items-center justify-between gap-4">
+       <div class="flex items-center gap-3"><button id="hamburgerBtn" class="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-sm flex-shrink-0 shadow-md border border-white/20" aria-label="Toggle Sidebar">
+         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
+         </svg></button>
+        <div class="text-left">
+         <h1 id="headerTitle" class="text-base md:text-lg font-bold text-white drop-shadow-lg whitespace-nowrap">💎 Fenomena</h1>
+         <p class="text-white/90 text-[10px] font-medium drop-shadow-md hidden md:block leading-none">Jelajahi Keajaiban Atom Karbon</p>
+        </div>
+       </div><!-- Home Button --> <a href="eksplorasi.html" class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 flex-shrink-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M12 9.75l-3-3m0 0l-3 3m3-3v12" />
+        </svg></a>
+      </div>
+     </header><!-- Content Area -->
+     <main id="contentArea" class="flex-1 p-4 md:p-6 overflow-y-auto" style="background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #e1f5fe 100%);"><!-- Tab 1: Fenomena -->
+      <div id="tab1" class="tab-content content-slide">
+       <div class="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-8 max-w-5xl mx-auto relative overflow-hidden">
+        <div class="relative z-10">
+         <div class="text-center mb-6">
+          <h2 class="text-3xl md:text-3xl font-bold gradient-text mb-2">💎 FENOMENA</h2>
+          <p class="text-gray-600 text-xs font-semibold">Intan vs Arang</p>
+          <div class="h-1 bg-gradient-to-r from-transparent via-indigo-400 to-transparent mt-4"></div>
+         </div>
+         <div class="bg-gradient-to-br from-orange-300 via-amber-200 to-yellow-100 rounded-2xl p-6 border-4 border-orange-400 shadow-2xl mb-8 relative overflow-hidden">
+          <div class="absolute inset-0 opacity-10">
+           <div class="absolute top-5 right-10 text-6xl">
+            💎
+           </div>
+           <div class="absolute bottom-5 left-10 text-6xl">
+            ⬛
+           </div>
+          </div>
+          <p class="text-center text-gray-800 font-semibold leading-relaxed relative z-10 text-xs md:text-sm">Pernahkah kamu menyadari hal unik di sekitarmu? Coba perhatikan intan yang berkilau mewah dan arang hitam sisa pembakaran sate. Secara fisik, keduanya tampak sangat bertolak belakang. Namun, tahukah kamu apa yang sebenarnya terjadi di balik perbedaan yang mencolok tersebut? <br><br><span class="text-sm md:text-base font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Intan keras dan indah, sedangkan arang rapuh dan kusam. </span></p>
+         </div><!-- FLIP CARDS SECTION -->
+         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-6 md:p-8 mb-8 border-2 border-blue-300 shadow-xl">
+          <h3 class="text-2xl font-bold text-center mb-2 text-blue-900">💎 Perbandingan Keduanya</h3>
+          <p class="text-center text-gray-600 mb-8 text-sm font-semibold">👆 Klik kartu untuk melihat struktur &amp; sifat yang menakjubkan</p>
+          <div class="grid md:grid-cols-2 gap-6"><!-- FLIP CARD 1: INTAN -->
+           <div class="flip-card-wrapper" id="diamondCard">
+            <div class="flip-card-inner"><!-- FRONT SIDE: Real Diamond Image -->
+             <div class="flip-card-side flip-card-front">
+              <div class="relative w-full h-full rounded-3xl shadow-2xl overflow-hidden flex flex-col items-center justify-center cursor-pointer hover:shadow-3xl transition-all duration-300 bg-white"><img src="https://manfaat.co.id/wp-content/uploads/2015/05/manfaat-intan.jpg" alt="Intan" class="absolute inset-0 w-full h-full object-cover" onerror="this.src=''; this.style.display='none';">
+               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+               <div class="relative z-10 text-center space-y-4 px-6">
+                <h3 class="text-6xl font-black text-white drop-shadow-xl tracking-wider">INTAN</h3>
+                <p class="text-white text-sm font-bold drop-shadow-md bg-black/40 backdrop-blur-md rounded-full px-5 py-2.5 inline-block border border-white/50">👆 Klik untuk lihat detail</p>
+               </div>
+              </div>
+             </div><!-- BACK SIDE: Diamond Structure & Info -->
+             <div class="flip-card-side flip-card-back">
+              <div class="relative w-full h-full bg-gradient-to-br from-cyan-100 via-blue-100 to-indigo-200 rounded-3xl shadow-2xl cursor-pointer flex flex-col overflow-hidden"><!-- Header - Sticky -->
+               <div class="text-center py-4 px-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white flex-shrink-0 border-b-4 border-cyan-600 shadow-lg">
+                <h3 class="text-2xl font-black leading-tight">💎 INTAN</h3>
+                <p class="text-cyan-100 text-sm font-bold leading-tight">Struktur Tetrahedral Rapat &amp; Kokoh</p>
+               </div><!-- Scrollable Content -->
+               <div class="scrollable-content flex-1 p-6 space-y-5 overflow-y-auto flex flex-col"><!-- Diamond Structure Image -->
+                <div class="bg-white rounded-3xl p-6 border-4 border-cyan-400 shadow-2xl flex justify-center items-center flex-shrink-0 min-h-48 hover:shadow-3xl transition-all"><img src="https://roboguru-forum-cdn.ruangguru.com/80a10f48-2ac9-4864-8a3c-8f799f013f42.png" alt="Struktur Intan Tetrahedral" class="max-h-56 w-auto object-contain drop-shadow-lg" onerror="this.src=''; this.alt='Struktur tidak dimuat';">
+                </div><!-- Properties Grid -->
+                <div class="space-y-2.5">
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-cyan-600 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">🔷 STRUKTUR KRISTAL</p>
+                  <p class="text-gray-700 text-xs leading-tight">Tetrahedral rapat &amp; sangat kokoh</p>
+                 </div>
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-yellow-600 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">💪 KEKERASAN</p>
+                  <p class="text-gray-700 text-xs leading-tight">Material terkeras di alam</p>
+                 </div>
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-pink-600 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">✨ SIFAT OPTIK</p>
+                  <p class="text-gray-700 text-xs leading-tight">Transparan, berkilau indah &amp; berpendar</p>
+                 </div>
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-purple-600 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">⚡ KONDUKTIVITAS</p>
+                  <p class="text-gray-700 text-xs leading-tight">Konduktor listrik sangat buruk</p>
+                 </div>
+                </div><!-- Key Info Box -->
+                <div class="bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-2xl p-5 shadow-xl border-2 border-cyan-300 mt-auto">
+                 <div class="flex items-start gap-3"><span class="text-3xl flex-shrink-0">🔗</span>
+                  <div>
+                   <p class="text-xs font-black leading-tight mb-1.5">IKATAN EKSTREM:</p>
+                   <p class="text-xs leading-tight font-semibold">Setiap atom C terikat pada <strong>4 atom C lainnya</strong> dalam struktur 3D yang <strong>PADAT &amp; KOKOH!</strong> Inilah mengapa intan begitu keras!</p>
+                  </div>
+                 </div>
+                </div>
+               </div>
+              </div>
+             </div>
+            </div>
+           </div><!-- FLIP CARD 2: ARANG -->
+           <div class="flip-card-wrapper" id="graphiteCard">
+            <div class="flip-card-inner"><!-- FRONT SIDE: Real Graphite/Coal Image -->
+             <div class="flip-card-side flip-card-front">
+              <div class="relative w-full h-full rounded-3xl shadow-2xl overflow-hidden flex flex-col items-center justify-center cursor-pointer hover:shadow-3xl transition-all duration-300 bg-gray-900"><img src="https://yubissayur.com/wp-content/uploads/2020/11/arang.jpg" alt="Arang" class="absolute inset-0 w-full h-full object-cover" onerror="this.src=''; this.style.display='none';">
+               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
+               <div class="relative z-10 text-center space-y-4 px-6">
+                <h3 class="text-6xl font-black text-white drop-shadow-xl tracking-wider">ARANG</h3>
+                <p class="text-white text-sm font-bold drop-shadow-md bg-black/40 backdrop-blur-md rounded-full px-5 py-2.5 inline-block border border-white/50">👆 Klik untuk lihat detail</p>
+               </div>
+              </div>
+             </div><!-- BACK SIDE: Graphite Structure & Info -->
+             <div class="flip-card-side flip-card-back">
+              <div class="relative w-full h-full bg-gradient-to-br from-orange-100 via-gray-100 to-yellow-100 rounded-3xl shadow-2xl cursor-pointer flex flex-col overflow-hidden"><!-- Header - Sticky -->
+               <div class="text-center py-4 px-4 bg-gradient-to-r from-orange-500 to-yellow-600 text-white flex-shrink-0 border-b-4 border-orange-600 shadow-lg">
+                <h3 class="text-2xl font-black leading-tight">⬛ ARANG (GRAFIT)</h3>
+                <p class="text-orange-100 text-sm font-bold leading-tight">Struktur Berlapis-Lapis</p>
+               </div><!-- Scrollable Content -->
+               <div class="scrollable-content flex-1 p-6 space-y-5 overflow-y-auto flex flex-col"><!-- Graphite Structure Image -->
+                <div class="bg-white rounded-3xl p-6 border-4 border-orange-400 shadow-2xl flex justify-center items-center flex-shrink-0 min-h-48 hover:shadow-3xl transition-all"><img src="https://www.eastcarb.com/wp-content/uploads/2024/10/Graphite-Structure.png" alt="Struktur Arang Berlapis" class="max-h-56 w-auto object-contain drop-shadow-lg" onerror="this.src=''; this.alt='Struktur tidak dapat dimuat';">
+                </div><!-- Properties Grid -->
+                <div class="space-y-2.5">
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-orange-600 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">✓ STRUKTUR KRISTAL</p>
+                  <p class="text-gray-700 text-xs leading-tight">Berlapis-lapis &amp; mudah tergelincir</p>
+                 </div>
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-red-600 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">💪 KEKERASAN</p>
+                  <p class="text-gray-700 text-xs leading-tight">Sangat lunak, mudah patah &amp; tergores</p>
+                 </div>
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-gray-700 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">🌫️ SIFAT OPTIK</p>
+                  <p class="text-gray-700 text-xs leading-tight">Hitam kusam, tidak berkilau</p>
+                 </div>
+                 <div class="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border-l-4 border-yellow-600 shadow-md hover:shadow-lg transition-all">
+                  <p class="text-gray-800 text-xs font-black mb-1">⚡ KONDUKTIVITAS</p>
+                  <p class="text-gray-700 text-xs leading-tight">Konduktor listrik &amp; panas sangat baik</p>
+                 </div>
+                </div><!-- Key Info Box -->
+                <div class="bg-gradient-to-br from-orange-500 to-yellow-600 text-white rounded-2xl p-5 shadow-xl border-2 border-orange-300 mt-auto">
+                 <div class="flex items-start gap-3"><span class="text-3xl flex-shrink-0">📚</span>
+                  <div>
+                   <p class="text-xs font-black leading-tight mb-1.5">IKATAN BERLAPIS:</p>
+                   <p class="text-xs leading-tight font-semibold">Setiap atom C terikat pada <strong>3 atom C lainnya</strong> dalam struktur berlapis 2D yang RENGGANG &amp; MUDAH BERGESER! Inilah mengapa arang lunak!</p>
+                  </div>
+                 </div>
+                </div>
+               </div>
+              </div>
+             </div>
+            </div>
+           </div>
+          </div><!-- ANSWER BUTTONS -->
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-6 border-2 border-blue-200 reveal-animation mt-6">
+           <h3 class="text-lg font-bold text-blue-800 mb-4 text-center">❓ Pertanyaan Menarik</h3>
+           <p class="text-gray-700 text-sm text-center leading-relaxed mb-6">Berdasarkan perbedaan sifat fisik yang sangat signifikan, apakah atom penyusun keduanya adalah unsur yang SAMA atau BERBEDA?</p>
+           <div class="grid md:grid-cols-2 gap-3"><button id="answerBedaBeda" class="answer-btn px-6 py-3 rounded-xl font-bold text-white text-sm shadow-lg transition-all" style="background: linear-gradient(135deg, #ef4444, #dc2626);"> 🔴 Unsur BERBEDA </button> <button id="answerSama" class="answer-btn px-6 py-3 rounded-xl font-bold text-white text-sm shadow-lg transition-all" style="background: linear-gradient(135deg, #22c55e, #16a34a);"> 🟢 Unsur SAMA (Karbon) </button>
+           </div>
+           <div id="answerFeedback" class="mt-4 hidden animate-fadeIn rounded-xl p-4 border-2 flex items-center gap-3">
+           </div>
+          </div><!-- FACT BOX -->
+          <div id="factBox" class="hidden reveal-animation bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-white shadow-2xl mt-6">
+           <div class="grid md:grid-cols-2 gap-6">
+            <div class="flex flex-col items-center justify-center text-center">
+             <div class="text-8xl mb-4 animate-bounce">
+              🤯
+             </div>
+             <h4 class="text-3xl font-black mb-2">WOW!</h4>
+             <p class="text-lg font-bold text-white/95 leading-relaxed">Intan &amp; Arang <strong>sama persis!</strong> <br>
+              Keduanya merupakan karbon (C)!</p>
+             <div class="mt-6 flex items-center justify-center gap-4">
+              <div class="text-4xl">
+               💎
+              </div>
+              <div class="text-3xl font-bold text-white/70">
+               =
+              </div>
+              <div class="text-4xl">
+               ⬛
+              </div>
+             </div>
+            </div>
+            <div class="space-y-4">
+             <div class="bg-gradient-to-br from-white/30 to-white/10 rounded-2xl p-5 backdrop-blur-md border border-white/40">
+              <div class="flex items-start gap-3"><span class="text-3xl">⚡</span>
+               <div class="text-left">
+                <p class="text-sm text-white/90 leading-relaxed"><strong>Perbedaannya bukan pada ATOMnya,</strong> tapi pada <strong>STRUKTUR</strong> atau cara atom-atomnya tersusun!</p>
+               </div>
+              </div>
+             </div>
+             <div class="grid grid-cols-2 gap-3">
+              <div class="bg-cyan-500/30 rounded-xl p-4 backdrop-blur-sm border border-cyan-300/50">
+               <p class="text-xs font-bold text-white mb-1">💎 INTAN</p>
+               <p class="text-xs text-white/90">Tersusun <strong>Rapat</strong></p>
+              </div>
+              <div class="bg-gray-700/30 rounded-xl p-4 backdrop-blur-sm border border-gray-500/50">
+               <p class="text-xs font-bold text-white mb-1">⬛ ARANG</p>
+               <p class="text-xs text-white/90">Tersusun <strong>Berlapis</strong></p>
+              </div>
+             </div>
+             <div class="bg-gradient-to-r from-yellow-500/30 to-orange-500/30 rounded-2xl p-5 backdrop-blur-md border border-yellow-300/50">
+              <div class="flex items-start gap-2"><span class="text-2xl">💡</span>
+               <div class="text-left">
+                <p class="text-sm font-bold text-yellow-100 mb-1">Ini namanya ALOTROPI!</p>
+                <p class="text-xs text-white/90">Ketika satu unsur punya beberapa bentuk berbeda</p>
+               </div>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="mt-6 pt-6 border-t border-white/30">
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-4 border border-white/20">
+             <h4 class="text-sm font-bold text-yellow-200 mb-2">🌉 Jembatan Konsep Penting</h4>
+             <p class="text-white/95 text-xs leading-relaxed"><strong>Hal ini membuktikan fleksibilitas luar biasa dari atom karbon dalam membentuk ikatan kovalen yang sangat stabil.</strong> Kemampuan unik ini tidak hanya terjadi antar sesama atom karbon, tetapi juga dengan atom lain. <br><br><strong>Salah satu unsur yang paling sederhana dan stabil saat berikatan kovalen dengan karbon adalah Hidrogen (H).</strong> Penggabungan inilah yang menjadi dasar terbentuknya keluarga besar senyawa <strong>HIDROKARBON</strong>.</p>
+            </div>
+            <p class="text-center leading-relaxed"><span class="inline-block bg-white/20 px-4 py-2 rounded-full text-sm font-bold mb-3">➔ Mari kita simpulkan</span></p>
+            <div class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">
+             SENYAWA HIDROKARBON
+            </div>
+            <p class="text-white/90 text-sm mt-3">Senyawa organik paling sederhana yang tersusun dari <strong>Karbon (C)</strong> &amp; <strong>Hidrogen (H)</strong></p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div><!-- Tab 2: Sejarah -->
+      <div id="tab2" class="tab-content content-slide hidden">
+       <div class="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-8 max-w-5xl mx-auto">
+        <div class="mb-8 text-center">
+         <h2 class="text-3xl md:text-3xl font-bold gradient-text mb-2">📜 SEJARAH SENYAWA KARBON</h2>
+         <p class="text-gray-600 text-xs font-semibold">Perjalanan sains dari Mitos 'Vis Vitalis' menuju Kimia Modern.</p>
+         <div class="h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent mt-4"></div>
+        </div><!-- TOKOH KUNCI: FRIEDRICH WÖHLER - AVATAR DENGAN ANIMASI -->
+        <div class="mb-8 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-3xl p-8 shadow-2xl relative overflow-hidden border-3 border-purple-500"><!-- Background Animation Elements -->
+         <div class="absolute inset-0 opacity-20">
+          <div class="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+          <div class="absolute -bottom-8 left-20 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+          <div class="absolute top-1/2 left-1/3 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+         </div>
+         <div class="flex flex-col items-center gap-6 relative z-10"><!-- Avatar dengan Animasi Pulse & Glow - CENTERED -->
+          <div class="relative mx-auto w-fit"><!-- Avatar Lingkaran Kecil dengan Pulse -->
+           <div class="w-40 h-40 rounded-full overflow-hidden shadow-2xl border-4 border-purple-400 flex-shrink-0 bg-gradient-to-br from-white to-purple-100 flex items-center justify-center cursor-pointer transition-all duration-300" style="animation: avatar-pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;"><img src="https://images.fineartamerica.com/images-medium-large/friedrich-wohler-1800-1882-sheila-terry.jpg" alt="Friedrich Wöhler" class="w-full h-full object-cover" onerror="this.src=''; this.parentElement.innerHTML='<span class=&quot;text-6xl&quot;>👨‍🔬</span>';">
+           </div><!-- Glow Aura -->
+           <div class="absolute inset-0 rounded-full w-40 h-40 mx-auto blur-lg opacity-50" style="background: radial-gradient(circle, rgba(192, 132, 250, 0.6), transparent); animation: avatar-glow 3s ease-in-out infinite;"></div>
+          </div><!-- Highlight Text -->
+          <div class="text-center space-y-3 max-w-2xl">
+           <h3 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 drop-shadow-lg">Friedrich Wöhler</h3>
+           <p class="text-lg md:text-xl font-bold text-purple-100">⚗️ Kimiawan Revolusioner Abad ke-19</p>
+           <p class="text-purple-300 text-sm md:text-base leading-relaxed">Membuktikan bahwa senyawa organik dapat dibuat dari benda mati, meruntuhkan teori "Vis Vitalis" yang dominan selama berabad-abad.</p>
+          </div><!-- CTA Button --> <button id="woehlerBtn" class="px-8 py-4 rounded-full font-bold text-white text-sm shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 inline-block w-auto mt-4" style="background: linear-gradient(135deg, #9333ea, #ec4899); box-shadow: 0 8px 25px rgba(147, 51, 234, 0.6); border: 2px solid rgba(255,255,255,0.5);"> ✨ Baca Kisah Lengkapnya! (Klik di Sini) </button>
+         </div>
+        </div><!-- TIMELINE INTERAKTIF REDESIGNED - PRACTICAL & WOW -->
+        <div class="mb-8">
+         <div class="text-center mb-8">
+          <h3 class="text-2xl font-bold text-center" style="color: #1f2937; background: linear-gradient(135deg, #f97316, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🗺️ Sejarah: Dari Mitos Menuju Fakta</h3>
+          <p class="text-gray-600 text-sm font-semibold">Klik setiap titik checkpoint di peta untuk mengungkap sejarahnya!</p>
+          <div class="h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent mt-4"></div>
+         </div><!-- MODERN TIMELINE -->
+         <div class="max-w-5xl mx-auto bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-3xl p-8 md:p-10 border-2 border-purple-200 shadow-xl relative overflow-hidden">
+          <div class="timeline-roadmap"><!-- NODES -->
+           <div class="timeline-nodes relative"><!-- Connection Line (Desktop Only) -->
+            <div class="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 via-pink-400 to-green-400 transform -translate-y-1/2 z-0"></div><!-- NODE 1: MITOS -->
+            <div class="timeline-node">
+             <div class="timeline-node-circle" style="background: linear-gradient(135deg, #f97316, #ea580c);" onclick="showTimelinePopup(1)" title="Klik untuk lihat detail!">
+              🔮
+             </div>
+             <div class="timeline-label">
+              <div class="timeline-label-title">
+               🌍 ERA MITOS
+              </div>
+              <div class="timeline-label-sub">
+               Mitos Vis Vitalis
+              </div>
+              <div class="timeline-label-badge">
+               Sebelum 1828
+              </div>
+             </div>
+            </div><!-- NODE 2: GEBRAKAN (HIGHLIGHT) -->
+            <div class="timeline-node highlight">
+             <div class="timeline-node-circle" style="background: linear-gradient(135deg, #ec4899, #be185d);" onclick="showTimelinePopup(2)" title="Klik untuk lihat detail!">
+              💥
+             </div>
+             <div class="timeline-label">
+              <div class="timeline-label-title">
+               ⚡ TITIK BALIK
+              </div>
+              <div class="timeline-label-sub">
+               Gebrakan Wöhler
+              </div>
+              <div class="timeline-label-badge">
+               1828
+              </div>
+             </div>
+            </div><!-- NODE 3: MODERN ERA -->
+            <div class="timeline-node">
+             <div class="timeline-node-circle" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="showTimelinePopup(3)" title="Klik untuk lihat detail!">
+              ⚛️
+             </div>
+             <div class="timeline-label">
+              <div class="timeline-label-title">
+               🔬 ERA MODERN
+              </div>
+              <div class="timeline-label-sub">
+               Definisi Baru
+              </div>
+              <div class="timeline-label-badge">
+               1850 - Sekarang
+              </div>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div><!-- TABEL KARAKTERISTIK -->
+        <div class="reveal-animation bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-6 md:p-8 border-3 border-indigo-300 mt-8">
+         <div class="mb-8">
+          <div class="flex items-center justify-center gap-3 mb-6"><span class="text-5xl">🎯</span>
+           <h3 class="text-3xl font-bold gradient-text">Implikasi Penting</h3>
+          </div>
+          <div class="bg-gradient-to-r from-indigo-100 to-purple-100 rounded-2xl p-6 border-2 border-indigo-300 shadow-lg">
+           <p class="text-gray-800 leading-relaxed mb-4"><strong class="text-indigo-700">Perubahan definisi ini membawa cara pandang baru!</strong></p>
+           <p class="text-gray-700 leading-relaxed mb-6">Kini, perbedaan antara senyawa <strong>Organik</strong> dan <strong>Anorganik</strong> tidak lagi didasarkan pada <strong>asalnya (hidup/mati)</strong>, melainkan pada karakteristik fisik dan kimianya, seperti jenis ikatan, struktur molekul, dan titik didihnya.</p>
+          </div>
+         </div>
+         <h3 class="text-2xl font-bold text-center mb-8 gradient-text">📊 Tabel Karakteristik: Organik vs. Anorganik</h3>
+         <div class="bg-white rounded-2xl overflow-hidden shadow-xl border-2 border-gray-200 mb-8">
+          <div class="overflow-x-auto">
+           <table class="w-full text-sm">
+            <thead>
+             <tr class="bg-gradient-to-r from-orange-500 to-amber-600 text-white">
+              <th class="px-4 py-3 text-left font-bold text-xs">📋 Karakteristik</th>
+              <th class="px-4 py-3 text-center font-bold text-xs">🌱 Organik</th>
+              <th class="px-4 py-3 text-center font-bold text-xs">🪨 Anorganik</th>
+             </tr>
+            </thead>
+            <tbody>
+             <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all">
+              <td class="px-4 py-4 font-bold text-xs text-gray-700 bg-gradient-to-r from-orange-50 to-amber-50">🌡️ Stabilitas Panas</td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-red-600">Tidak Stabil</strong> (Mudah terurai/hangus)<br><span class="text-xs text-gray-600 italic">Contoh: Gula terbakar menjadi arang</span></td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-green-600">Stabil</strong> (Tahan panas)<br><span class="text-xs text-gray-600 italic">Contoh: NaCl tetap solid di suhu tinggi</span></td>
+             </tr>
+             <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all bg-gray-50">
+              <td class="px-4 py-4 font-bold text-xs text-gray-700 bg-gradient-to-r from-orange-50 to-amber-50">📍 Titik Leleh</td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-blue-600">Rendah</strong> (Umumnya &lt; 300°C)<br><span class="text-xs text-gray-600 italic">Contoh: Parafin meleleh di 47°C</span></td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-orange-600">Tinggi</strong> (Umumnya &gt; 800°C)<br><span class="text-xs text-gray-600 italic">Contoh: NaCl meleleh di 801°C</span></td>
+             </tr>
+             <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all">
+              <td class="px-4 py-4 font-bold text-xs text-gray-700 bg-gradient-to-r from-orange-50 to-amber-50">🌡️ Titik Didih</td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-blue-600">Rendah</strong><br><span class="text-xs text-gray-600 italic">Contoh: Etanol mendidih di 78°C</span></td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-orange-600">Tinggi</strong><br><span class="text-xs text-gray-600 italic">Contoh: NaCl mendidih di 1413°C</span></td>
+             </tr>
+             <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all bg-gray-50">
+              <td class="px-4 py-4 font-bold text-xs text-gray-700 bg-gradient-to-r from-orange-50 to-amber-50">💧 Kelarutan</td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-purple-600">Umumnya Non-Polar</strong> (Larut dalam pelarut organik)<br><span class="text-xs text-gray-600 italic">Contoh: Bensin larut dalam kloroform</span></td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-cyan-600">Umumnya Polar</strong> (Larut dalam air)<br><span class="text-xs text-gray-600 italic">Contoh: Garam melarut dalam air</span></td>
+             </tr>
+             <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all">
+              <td class="px-4 py-4 font-bold text-xs text-gray-700 bg-gradient-to-r from-orange-50 to-amber-50">🔗 Jenis Ikatan</td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-pink-600">Kovalen</strong> (Elektron bersama)<br><span class="text-xs text-gray-600 italic">Contoh: Etanol (C₂H₅OH)</span></td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-red-600">Ionik atau Kovalen Polar</strong><br><span class="text-xs text-gray-600 italic">Contoh: NaCl (Natrium Klorida)</span></td>
+             </tr>
+             <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all bg-gray-50">
+              <td class="px-4 py-4 font-bold text-xs text-gray-700 bg-gradient-to-r from-orange-50 to-amber-50">🔥 Pembakaran</td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-orange-600">Mudah Terbakar</strong> (Flammable)<br><span class="text-xs text-gray-600 italic">Contoh: Minyak, bensin, alkohol</span></td>
+              <td class="px-4 py-4 text-xs text-gray-800"><strong class="text-blue-600">Tidak Terbakar</strong> (Non-flammable)<br><span class="text-xs text-gray-600 italic">Contoh: Garam, pasir, batu</span></td>
+             </tr>
+            </tbody>
+           </table>
+          </div>
+         </div>
+         <div class="mt-6 bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl p-6 border-2 border-green-400">
+          <div class="bg-white/50 rounded-xl p-4 border-l-4 border-orange-500">
+            <p class="text-gray-800 leading-relaxed text-sm"><strong class="text-orange-700">💡 Perlu Diingat:</strong><br>Meskipun memiliki karakteristik yang berbeda, terdapat beberapa pengecualian. Contohnya, gula dan alkohol adalah senyawa organik yang dapat larut dalam air karena memiliki gugus fungsi polar, meskipun rangka utamanya adalah karbon.</p>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div><!-- Tab 3: Konsep -->
+      <div id="tab3" class="tab-content content-slide hidden">
+       <div class="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-5 md:p-6 max-w-5xl mx-auto"><!-- KEKHASAN ATOM KARBON - PART 1 -->
+        <div class="mb-6">
+         <div class="text-center mb-6">
+          <h2 class="text-3xl md:text-3xl font-bold gradient-text mb-2">⚛️ KEKHASAN ATOM KARBON</h2>
+          <p class="text-gray-600 text-xs font-semibold">Atom karbon menjadi kerangka dasar senyawa organik</p>
+          <div class="h-1 bg-gradient-to-r from-transparent via-indigo-400 to-transparent mt-4"></div>
+         </div><!-- Data Kunci Grid -->
+         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+          <div class="group bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-blue-400/50">
+           <div class="text-4xl mb-2 text-center">
+            ⚛️
+           </div>
+           <p class="text-xs font-bold text-blue-100 text-center mb-1 uppercase">Simbol</p>
+           <p class="text-3xl font-black text-center">C</p>
+           <p class="text-xs font-bold text-blue-100 text-center mt-1">No. Atom 6</p>
+          </div>
+          <div class="group bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-purple-400/50">
+           <div class="text-4xl mb-2 text-center">
+            ⚡
+           </div>
+           <p class="text-xs font-bold text-purple-100 text-center mb-1 uppercase">Elektron</p>
+           <p class="text-3xl font-black text-center">4</p>
+           <p class="text-xs font-bold text-purple-100 text-center mt-1">Valensi</p>
+          </div>
+          <div class="group bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-green-400/50">
+           <div class="text-4xl mb-2 text-center">
+            📍
+           </div>
+           <p class="text-xs font-bold text-green-100 text-center mb-1 uppercase">Golongan</p>
+           <p class="text-3xl font-black text-center">IVA</p>
+           <p class="text-xs font-bold text-green-100 text-center mt-1">Periode 2</p>
+          </div>
+          <div class="group bg-gradient-to-br from-orange-50 to-red-600 text-white rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-orange-400/50">
+           <div class="text-4xl mb-2 text-center">
+            🔧
+           </div>
+           <p class="text-xs font-bold text-orange-100 text-center mb-1 uppercase">Sifat</p>
+           <p class="text-2xl font-black text-center">Non</p>
+           <p class="text-xs font-bold text-orange-100 text-center mt-1">Logam</p>
+          </div>
+          <div class="group bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-indigo-400/50 cursor-pointer">
+           <div class="text-4xl mb-2 text-center">
+            ⚛️
+           </div>
+           <p class="text-xs font-bold text-indigo-100 text-center mb-1 uppercase">Konfigurasi</p>
+           <p class="text-sm font-black text-center font-mono">[He]2s²2p²</p>
+          </div>
+         </div>
+        </div><!-- MENGAPA KARBON ISTIMEWA -->
+        <div class="mb-6">
+         <h3 class="text-lg font-bold text-center mb-6 gradient-text">🌟 Mengapa Karbon Istimewa?</h3>
+         <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-6 border-2 border-indigo-300 shadow-lg hover:shadow-xl transition-all hover:-translate-y-2 cursor-pointer">
+           <div class="text-5xl mb-4 text-center">
+            4️⃣
+           </div>
+           <h4 class="text-xl font-bold text-indigo-900 mb-3 text-center">Sifat Tetravalensi</h4>
+           <p class="text-gray-700 text-sm leading-relaxed mb-4"><strong>Konsep:</strong> Atom C memiliki 4 elektron valensi dalam orbital terluarnya.</p>
+           <div class="bg-indigo-600 text-white rounded-xl p-3 text-center">
+            <p class="text-xs font-bold mb-1">IMPLIKASI PENTING</p>
+            <p class="text-sm font-black">Dapat membentuk 4 IKATAN KOVALEN sekaligus!</p>
+            <p class="text-xs text-indigo-100 mt-2">Untuk mencapai kestabilan (Kaidah Oktet)</p>
+           </div>
+          </div>
+          <div class="bg-gradient-to-br from-cyan-50 to-teal-50 rounded-2xl p-6 border-2 border-cyan-300 shadow-lg hover:shadow-xl transition-all hover:-translate-y-2 cursor-pointer">
+           <div class="text-5xl mb-4 text-center">
+            🌍
+           </div>
+           <h4 class="text-xl font-bold text-cyan-900 mb-3 text-center">Atom Karbon Kecil</h4>
+           <p class="text-gray-700 text-sm leading-relaxed mb-4"><strong>Konsep:</strong> Karbon terletak di Periode 2, jari-jarinya relatif kecil.</p>
+           <div class="bg-cyan-600 text-white rounded-xl p-3 text-center">
+            <p class="text-xs font-bold mb-1">IMPLIKASI PENTING</p>
+            <p class="text-sm font-black">Ikatan C–C dan C–H SANGAT KUAT &amp; STABIL!</p>
+            <p class="text-xs text-cyan-100 mt-2">Senyawa karbon tidak mudah terurai</p>
+           </div>
+          </div>
+         </div>
+        </div><!-- POSISI ATOM KARBON - PART 2 -->
+        <div class="mb-6">
+         <div class="text-center mb-4">
+          <h3 class="text-lg font-bold gradient-text mb-1">🔗 Klasifikasi: Jenuh vs. Tak Jenuh</h3>
+          <p class="text-gray-600 text-xs">Klik header untuk buka/tutup pembahasan</p>
+         </div>
+         <div class="space-y-3 max-w-4xl mx-auto"><!-- ACCORDION ITEM 1: SATURATED -->
+          <div class="accordion-item"><button class="accordion-header bg-gradient-to-r from-blue-500 to-cyan-600 text-white" onclick="toggleAccordion(this)"> <span class="flex items-center gap-3"> <span class="text-2xl">🔗</span> <span>1. Ikatan Jenuh (Tunggal)</span> </span>
+            <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg></button>
+           <div class="accordion-content">
+            <div class="px-6 py-6 bg-gradient-to-br from-blue-50 to-cyan-50 space-y-4">
+             <div class="bg-white rounded-xl p-5 border-l-4 border-blue-600 shadow-sm">
+              <p class="text-sm text-gray-600 mb-2"><strong class="text-blue-700">📖 Definisi:</strong></p>
+              <p class="text-gray-800 leading-relaxed">Semua ikatan antar atom karbon adalah <strong>ikatan tunggal</strong> (–C–C–).</p>
+             </div>
+             <div class="bg-white rounded-xl p-5 border-l-4 border-cyan-600 shadow-sm">
+              <p class="text-sm text-gray-600 mb-2"><strong class="text-cyan-700">💡 Konsep:</strong></p>
+              <p class="text-gray-800 leading-relaxed">Disebut "Jenuh" karena atom C sudah mengikat jumlah atom Hidrogen secara <strong>maksimal (penuh)</strong>. Tidak bisa ditambah lagi.</p>
+             </div>
+             <div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl p-5 border-2 border-green-400 shadow-sm">
+              <p class="text-sm font-bold text-green-800 mb-3">📌 Contoh: Golongan ALKANA</p>
+              <p class="text-sm text-green-800">Rumus Umum: <strong>CₙH₂ₙ₊₂</strong></p>
+              <ul class="text-xs text-green-800 mt-2 space-y-1 ml-4 list-disc">
+               <li><strong>Metana:</strong> CH₄ (1 atom C)</li>
+               <li><strong>Etana:</strong> C₂H₆ (2 atom C)</li>
+               <li><strong>Propana:</strong> C₃H₈ (3 atom C)</li>
+               <li><strong>Butana:</strong> C₄H₁₀ (4 atom C)</li>
+              </ul>
+             </div>
+            </div>
+           </div>
+          </div><!-- ACCORDION ITEM 2: UNSATURATED -->
+          <div class="accordion-item"><button class="accordion-header bg-gradient-to-r from-orange-500 to-red-600 text-white" onclick="toggleAccordion(this)"> <span class="flex items-center gap-3"> <span class="text-2xl">🔄</span> <span>2. Ikatan Tak Jenuh (Rangkap)</span> </span>
+            <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg></button>
+           <div class="accordion-content">
+            <div class="px-6 py-6 bg-gradient-to-br from-orange-50 to-red-50 space-y-4">
+             <div class="bg-white rounded-xl p-5 border-l-4 border-orange-600 shadow-sm">
+              <p class="text-sm text-gray-600 mb-2"><strong class="text-orange-700">📖 Definisi:</strong></p>
+              <p class="text-gray-800 leading-relaxed">Terdapat setidaknya satu <strong>ikatan rangkap</strong> (ganda atau tiga) antar atom karbon.</p>
+             </div>
+             <div class="bg-white rounded-xl p-5 border-l-4 border-red-600 shadow-sm">
+              <p class="text-sm text-gray-600 mb-2"><strong class="text-red-700">💡 Konsep:</strong></p>
+              <p class="text-gray-800 leading-relaxed">Disebut "Tak Jenuh" karena ikatan rangkapnya masih bisa <strong>diputus</strong> untuk mengikat atom lain (masih muat).</p>
+             </div>
+             <div class="grid md:grid-cols-2 gap-4">
+              <div class="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl p-5 border-2 border-blue-400 shadow-sm">
+               <p class="text-sm font-bold text-blue-800 mb-3">Ikatan Rangkap Dua:</p>
+               <p class="text-sm text-blue-900 font-semibold mb-2">(–C=C–) → Golongan <strong>Alkena</strong></p>
+               <p class="text-sm text-blue-800 mb-2">Rumus: <strong>CₙH₂ₙ</strong></p>
+               <ul class="text-xs text-blue-800 space-y-1 ml-4 list-disc">
+                <li><strong>Etena:</strong> C₂H₄</li>
+                <li><strong>Propena:</strong> C₃H₆</li>
+                <li><strong>Butena:</strong> C₄H₈</li>
+               </ul>
+              </div>
+              <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-5 border-2 border-purple-400 shadow-sm">
+               <p class="text-sm font-bold text-purple-800 mb-3">Ikatan Rangkap Tiga:</p>
+               <p class="text-sm text-purple-900 font-semibold mb-2">(–C≡C–) → Golongan <strong>Alkuna</strong></p>
+               <p class="text-sm text-purple-800 mb-2">Rumus: <strong>CₙH₂ₙ₋₂</strong></p>
+               <ul class="text-xs text-purple-800 space-y-1 ml-4 list-disc">
+                <li><strong>Etuna:</strong> C₂H₂</li>
+                <li><strong>Propuna:</strong> C₃H₄</li>
+                <li><strong>Butuna:</strong> C₄H₆</li>
+               </ul>
+              </div>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div><!-- KEMAMPUAN KATENASI -->
+        <div class="mb-6">
+         <div class="text-center mb-4">
+          <h3 class="text-lg font-bold gradient-text mb-1">🔗 Kemampuan Katenasi: Membentuk Rantai Karbon</h3>
+          <p class="text-gray-600 text-xs">Klik header untuk buka/tutup pembahasan</p>
+         </div>
+         <div class="space-y-3 max-w-4xl mx-auto"><!-- ACCORDION ITEM 1: ALIFATIK -->
+          <div class="accordion-item"><button class="accordion-header bg-gradient-to-r from-orange-500 to-amber-600 text-white" onclick="toggleAccordion(this)"> <span class="flex items-center gap-3"> <span class="text-2xl">↔️</span> <span>1. Alifatik (Rantai Terbuka)</span> </span>
+            <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg></button>
+           <div class="accordion-content">
+            <div class="px-6 py-6 bg-gradient-to-br from-orange-50 to-amber-50 space-y-4">
+             <div class="bg-white rounded-xl p-5 border-l-4 border-orange-600 shadow-sm">
+              <p class="text-sm text-gray-600 mb-2"><strong class="text-orange-700">📖 Definisi:</strong></p>
+              <p class="text-gray-800 leading-relaxed">Senyawa karbon dengan rantai karbon <strong>terbuka</strong> (tidak membentuk cincin). Dapat berupa rantai lurus atau bercabang.</p>
+             </div>
+             <div class="grid md:grid-cols-2 gap-4">
+              <div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl p-4 border-l-4 border-green-600">
+               <p class="font-bold text-green-900 mb-3">🔗 Rantai Lurus (Linear)</p>
+               <p class="text-xs text-green-800 mb-3 leading-relaxed">Atom karbon tersusun membentuk garis lurus berkesinambungan tanpa percabangan.</p>
+               <div class="bg-white rounded-lg p-2 mb-2 flex justify-center items-center h-24 overflow-hidden border border-green-200">
+                <!-- MENGGANTI IMG DENGAN SVG AGAR PASTI MUNCUL -->
+                <svg width="100%" height="100%" viewBox="0 0 300 60" preserveAspectRatio="xMidYMid meet">
+                 <text x="20" y="38" font-family="monospace" font-weight="bold" font-size="20" fill="#15803d">H₃C</text>
+                 <line x1="60" y1="32" x2="90" y2="32" stroke="#15803d" stroke-width="2" />
+                 <text x="95" y="38" font-family="monospace" font-weight="bold" font-size="20" fill="#15803d">CH₂</text>
+                 <line x1="135" y1="32" x2="165" y2="32" stroke="#15803d" stroke-width="2" />
+                 <text x="170" y="38" font-family="monospace" font-weight="bold" font-size="20" fill="#15803d">CH₂</text>
+                 <line x1="210" y1="32" x2="240" y2="32" stroke="#15803d" stroke-width="2" />
+                 <text x="245" y="38" font-family="monospace" font-weight="bold" font-size="20" fill="#15803d">CH₃</text>
+                </svg>
+               </div>
+               <p class="text-xs text-green-700 font-semibold">✓ Contoh: Butana (C₄H₁₀)</p>
+              </div>
+              <div class="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl p-4 border-l-4 border-blue-600">
+               <p class="font-bold text-blue-900 mb-3">🌿 Rantai Bercabang</p>
+               <p class="text-xs text-blue-800 mb-3 leading-relaxed">Atom karbon memiliki cabang-cabang yang keluar dari rantai utama.</p>
+               <div class="bg-white rounded-lg p-2 mb-2 flex justify-center items-center h-32 overflow-hidden border border-blue-200">
+                <!-- MENGGANTI IMG DENGAN SVG AGAR PASTI MUNCUL -->
+                <svg width="100%" height="100%" viewBox="0 0 300 100" preserveAspectRatio="xMidYMid meet">
+                 <text x="10" y="75" font-family="monospace" font-weight="bold" font-size="20" fill="#1d4ed8">H₃C</text>
+                 <line x1="50" y1="70" x2="80" y2="70" stroke="#1d4ed8" stroke-width="2" />
+                 <text x="85" y="75" font-family="monospace" font-weight="bold" font-size="20" fill="#1d4ed8">CH</text>
+                 <!-- Branch 1 (Up) -->
+                 <line x1="100" y1="55" x2="100" y2="35" stroke="#1d4ed8" stroke-width="2" />
+                 <text x="85" y="30" font-family="monospace" font-weight="bold" font-size="20" fill="#1d4ed8">CH₃</text>
+                 <line x1="115" y1="70" x2="145" y2="70" stroke="#1d4ed8" stroke-width="2" />
+                 <text x="150" y="75" font-family="monospace" font-size="20" fill="#1d4ed8">CH</text>
+                 <!-- Branch 2 (Up) -->
+                 <line x1="165" y1="55" x2="165" y2="35" stroke="#1d4ed8" stroke-width="2" />
+                 <text x="150" y="30" font-family="monospace" font-weight="bold" font-size="20" fill="#1d4ed8">CH₃</text>
+                 <line x1="180" y1="70" x2="210" y2="70" stroke="#1d4ed8" stroke-width="2" />
+                 <text x="215" y="75" font-family="monospace" font-weight="bold" font-size="20" fill="#1d4ed8">CH₃</text>
+                </svg>
+               </div>
+               <p class="text-xs text-blue-700 font-semibold">✓ Contoh: 2,3-dimetilbutana</p>
+              </div>
+             </div>
+            </div>
+           </div>
+          </div><!-- ACCORDION ITEM 2: SIKLIK -->
+          <div class="accordion-item"><button class="accordion-header bg-gradient-to-r from-purple-500 to-pink-600 text-white" onclick="toggleAccordion(this)"> <span class="flex items-center gap-3"> <span class="text-2xl">⭕</span> <span>2. Siklik (Rantai Tertutup)</span> </span>
+            <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg></button>
+           <div class="accordion-content">
+            <div class="px-6 py-6 bg-gradient-to-br from-purple-50 to-pink-50 space-y-4">
+             <div class="bg-white rounded-xl p-5 border-l-4 border-purple-600 shadow-sm">
+              <p class="text-sm text-gray-600 mb-2"><strong class="text-purple-700">📖 Definisi:</strong></p>
+              <p class="text-gray-800 leading-relaxed">Senyawa karbon dengan rantai karbon yang <strong>tertutup membentuk cincin</strong>. Terdapat dua jenis: Asiklik (jenuh) dan Aromatik.</p>
+             </div>
+             <div class="grid md:grid-cols-2 gap-4">
+              <div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl p-4 border-l-4 border-green-600">
+               <p class="font-bold text-green-900 mb-3">🔴 Asiklik (Saturated)</p>
+               <p class="text-xs text-green-800 mb-3 leading-relaxed">Senyawa siklik jenuh tanpa ikatan rangkap. Semua ikatan adalah tunggal.</p>
+               <div class="bg-white rounded-lg p-2 mb-2 flex justify-center items-center h-32 overflow-hidden border border-green-200">
+                <!-- SVG SIKLOPENTANA: Explicit vs Skeletal -->
+                <svg width="100%" height="100%" viewBox="0 0 300 120" preserveAspectRatio="xMidYMid meet">
+                 <!-- Tanda Sama Dengan -->
+                 <text x="150" y="65" font-family="sans-serif" font-size="24" fill="#15803d" text-anchor="middle" font-weight="bold">=</text>
+                 
+                 <!-- KIRI: Struktur Explicit (CH2) -->
+                 <g transform="translate(20, 10) scale(0.8)">
+                    <!-- Ikatan -->
+                    <line x1="75" y1="20" x2="115" y2="50" stroke="#15803d" stroke-width="2" />
+                    <line x1="115" y1="50" x2="100" y2="95" stroke="#15803d" stroke-width="2" />
+                    <line x1="100" y1="95" x2="50" y2="95" stroke="#15803d" stroke-width="2" />
+                    <line x1="50" y1="95" x2="35" y2="50" stroke="#15803d" stroke-width="2" />
+                    <line x1="35" y1="50" x2="75" y2="20" stroke="#15803d" stroke-width="2" />
+                    
+                    <!-- Atom -->
+                    <circle cx="75" cy="20" r="12" fill="white" />
+                    <text x="75" y="25" font-family="monospace" font-size="14" fill="#15803d" text-anchor="middle" font-weight="bold">CH₂</text>
+                    
+                    <circle cx="115" cy="50" r="12" fill="white" />
+                    <text x="115" y="55" font-family="monospace" font-size="14" fill="#15803d" text-anchor="middle" font-weight="bold">CH₂</text>
+                    
+                    <circle cx="100" cy="95" r="12" fill="white" />
+                    <text x="100" y="100" font-family="monospace" font-size="14" fill="#15803d" text-anchor="middle" font-weight="bold">H₂C</text>
+                    
+                    <circle cx="50" cy="95" r="12" fill="white" />
+                    <text x="50" y="100" font-family="monospace" font-size="14" fill="#15803d" text-anchor="middle" font-weight="bold">H₂C</text>
+                    
+                    <circle cx="35" cy="50" r="12" fill="white" />
+                    <text x="35" y="55" font-family="monospace" font-size="14" fill="#15803d" text-anchor="middle" font-weight="bold">H₂C</text>
+                 </g>
+
+                 <!-- KANAN: Struktur Skeletal (Segi Lima) -->
+                 <g transform="translate(180, 10) scale(0.8)">
+                    <polygon points="75,20 115,50 100,95 50,95 35,50" fill="none" stroke="#15803d" stroke-width="3" stroke-linejoin="round" />
+                 </g>
+                 
+                 <text x="75" y="115" font-family="sans-serif" font-size="10" fill="#15803d" text-anchor="middle">Struktur Lengkap</text>
+                 <text x="240" y="115" font-family="sans-serif" font-size="10" fill="#15803d" text-anchor="middle">Struktur Garis</text>
+                </svg>
+               </div>
+               <p class="text-xs text-green-700 font-semibold">✓ Contoh: Siklopentana (C₅H₁₀)</p>
+              </div>
+              <div class="bg-gradient-to-br from-red-100 to-pink-100 rounded-xl p-4 border-l-4 border-red-600">
+               <p class="font-bold text-red-900 mb-3">🌸 Aromatik (Unsaturated)</p>
+               <p class="text-xs text-red-800 mb-3 leading-relaxed">Memiliki struktur cincin dengan ikatan rangkap terkonjugasi yang stabil.</p>
+               <div class="bg-white rounded-lg p-2 mb-2 flex justify-center items-center h-32 overflow-hidden border border-red-200">
+                <!-- SVG BENZENA: Explicit vs Skeletal -->
+                <svg width="100%" height="100%" viewBox="0 0 300 120" preserveAspectRatio="xMidYMid meet">
+                 <!-- Tanda Sama Dengan -->
+                 <text x="150" y="65" font-family="sans-serif" font-size="24" fill="#be123c" text-anchor="middle" font-weight="bold">=</text>
+                 
+                 <!-- KIRI: Struktur Explicit (CH) -->
+                 <g transform="translate(20, 10) scale(0.8)">
+                    <!-- Ikatan (Kekule) -->
+                    <line x1="75" y1="15" x2="110" y2="35" stroke="#be123c" stroke-width="2" /> <!-- Double -->
+                    <line x1="75" y1="19" x2="106" y2="37" stroke="#be123c" stroke-width="2" />
+                    
+                    <line x1="110" y1="35" x2="110" y2="75" stroke="#be123c" stroke-width="2" />
+                    
+                    <line x1="110" y1="75" x2="75" y2="95" stroke="#be123c" stroke-width="2" /> <!-- Double -->
+                    <line x1="106" y1="73" x2="75" y2="91" stroke="#be123c" stroke-width="2" />
+                    
+                    <line x1="75" y1="95" x2="40" y2="75" stroke="#be123c" stroke-width="2" />
+                    
+                    <line x1="40" y1="75" x2="40" y2="35" stroke="#be123c" stroke-width="2" /> <!-- Double -->
+                    <line x1="44" y1="73" x2="44" y2="37" stroke="#be123c" stroke-width="2" />
+                    
+                    <line x1="40" y1="35" x2="75" y2="15" stroke="#be123c" stroke-width="2" />
+
+                    <!-- Atom -->
+                    <circle cx="75" cy="15" r="10" fill="white" />
+                    <text x="75" y="20" font-family="monospace" font-size="14" fill="#be123c" text-anchor="middle" font-weight="bold">CH</text>
+                    
+                    <circle cx="110" cy="35" r="10" fill="white" />
+                    <text x="110" y="40" font-family="monospace" font-size="14" fill="#be123c" text-anchor="middle" font-weight="bold">CH</text>
+                    
+                    <circle cx="110" cy="75" r="10" fill="white" />
+                    <text x="110" y="80" font-family="monospace" font-size="14" fill="#be123c" text-anchor="middle" font-weight="bold">CH</text>
+                    
+                    <circle cx="75" cy="95" r="10" fill="white" />
+                    <text x="75" y="100" font-family="monospace" font-size="14" fill="#be123c" text-anchor="middle" font-weight="bold">CH</text>
+                    
+                    <circle cx="40" cy="75" r="10" fill="white" />
+                    <text x="40" y="80" font-family="monospace" font-size="14" fill="#be123c" text-anchor="middle" font-weight="bold">HC</text>
+                    
+                    <circle cx="40" cy="35" r="10" fill="white" />
+                    <text x="40" y="40" font-family="monospace" font-size="14" fill="#be123c" text-anchor="middle" font-weight="bold">HC</text>
+                 </g>
+
+                 <!-- KANAN: Struktur Skeletal (Resonansi) -->
+                 <g transform="translate(180, 10) scale(0.8)">
+                    <!-- Segi Enam -->
+                    <polygon points="75,15 110,35 110,75 75,95 40,75 40,35" fill="none" stroke="#be123c" stroke-width="3" stroke-linejoin="round" />
+                    <!-- Lingkaran -->
+                    <circle cx="75" cy="55" r="20" fill="none" stroke="#be123c" stroke-width="2" />
+                 </g>
+                 
+                 <text x="75" y="115" font-family="sans-serif" font-size="10" fill="#be123c" text-anchor="middle">Struktur Kekulé</text>
+                 <text x="240" y="115" font-family="sans-serif" font-size="10" fill="#be123c" text-anchor="middle">Struktur Resonansi</text>
+                </svg>
+               </div>
+               <p class="text-xs text-red-700 font-semibold">✓ Contoh: Benzena (C₆H₆)</p>
+              </div>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div><!-- POSISI ATOM KARBON - UPGRADED -->
+        <div class="mb-6">
+         <div class="carbon-container">
+          <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 10px;">⚛️ Posisi Atom Karbon dalam Rantai</h2><!-- SVG DIAGRAM -->
+          <div class="svg-box">
+           <svg width="600" height="300" viewbox="0 0 600 300"><defs>
+             <filter id="glow">
+              <fegaussianblur stddeviation="4" result="coloredBlur" />
+              <femerge>
+               <femergenode in="coloredBlur" />
+               <femergenode in="SourceGraphic" />
+              </femerge>
+             </filter>
+            </defs> <line class="bond" x1="72" y1="150" x2="128" y2="150" /> <line class="bond" x1="172" y1="150" x2="228" y2="150" /> <line class="bond" x1="250" y1="128" x2="250" y2="72" /> <line class="bond" x1="272" y1="150" x2="328" y2="150" /> <line class="bond" x1="350" y1="172" x2="350" y2="228" /> <line class="bond" x1="350" y1="128" x2="350" y2="72" /> <line class="bond" x1="372" y1="150" x2="428" y2="150" /> <line class="bond" x1="472" y1="150" x2="528" y2="150" /> <g fill="white" font-weight="bold" font-size="16" text-anchor="middle">
+              <circle class="carbon-atom" data-type="primer" cx="50" cy="150" r="22" fill="#34d399" />
+              <text x="50" y="157">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="sekunder" cx="150" cy="150" r="22" fill="#34d399" />
+              <text x="150" y="157">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="tersier" cx="250" cy="150" r="22" fill="#34d399" />
+              <text x="250" y="157">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="primer" cx="250" cy="50" r="22" fill="#34d399" />
+              <text x="250" y="57">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="kuarterner" cx="350" cy="150" r="22" fill="#34d399" />
+              <text x="350" y="157">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="primer" cx="350" cy="250" r="22" fill="#34d399" />
+              <text x="350" y="257">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="primer" cx="350" cy="50" r="22" fill="#34d399" />
+              <text x="350" y="57">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="sekunder" cx="450" cy="150" r="22" fill="#34d399" />
+              <text x="450" y="157">
+               C
+              </text>
+              <circle class="carbon-atom" data-type="primer" cx="550" cy="150" r="22" fill="#34d399" />
+              <text x="550" y="157">
+               C
+              </text>
+             </g>
+            </svg>
+          </div><!-- BUTTONS GRID - MOVED BELOW SVG & MINIMALIST -->
+          <div class="btn-grid"><button class="carbon-label primer" data-type="primer">
+            <div class="deg-label">
+             1°
+            </div> C-Primer</button> <button class="carbon-label sekunder" data-type="sekunder">
+            <div class="deg-label">
+             2°
+            </div> C-Sekunder</button> <button class="carbon-label tersier" data-type="tersier">
+            <div class="deg-label">
+             3°
+            </div> C-Tersier</button> <button class="carbon-label kuarterner" data-type="kuarterner">
+            <div class="deg-label">
+             4°
+            </div> C-Kuarterner</button>
+          </div><!-- EXPLANATION BOX - HIDDEN BY DEFAULT -->
+          <div id="carbon-explanation">
+           <p style="margin: 0; color: #555; line-height: 2; font-size: 15px;"></p>
+          </div>
+         </div>
+        </div><!-- FLOATING CARD - PREMIUM UNIQUE DESIGN (TAB KONSEP ONLY) -->
+        <div class="mb-8 max-w-4xl mx-auto mt-8">
+         <div class="floating-card-rectangular" id="riverCard">
+          <div class="card-rect-header" onclick="toggleRiverCard()">
+           <div class="card-rect-header-content"><span class="card-rect-icon">🕵️‍♂️</span>
+            <div class="card-rect-text">
+             <p class="card-rect-title">Misteri Sungai Berbusa (1960)</p>
+             <p class="card-rect-subtitle">Investigasi Kasus &amp; Tantangan Pengusaha Deterjen</p>
+            </div>
+           </div><span class="card-rect-expand" id="riverCardExpand">▼</span>
+          </div>
+          <div class="card-rect-body" id="riverCardBody">
+           <div class="card-rect-content p-6 space-y-8"><!-- Story Section -->
+            <div class="relative bg-gray-900 rounded-2xl p-6 overflow-hidden text-white shadow-2xl">
+             <div class="absolute inset-0 opacity-30 bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/87/Foam_on_the_River_Tame_-_geograph.org.uk_-_11400.jpg')] bg-cover bg-center mix-blend-overlay"></div>
+             <div class="relative z-10">
+              <h4 class="text-2xl font-bold text-yellow-400 mb-3 flex items-center gap-2"><span class="text-3xl">🕰️</span> Time Travel: Tahun 1960-an</h4>
+              <p class="text-gray-100 leading-relaxed italic font-medium">"Bayangkan kamu hidup di tahun 1960-an. Kamu pergi ke sungai untuk memancing, tapi yang kamu lihat bukan air jernih, melainkan gunungan busa putih setinggi 2 meter yang menutupi permukaan air. Ikan-ikan mati, dan air berbau busuk. Fenomena ini terjadi di seluruh dunia, termasuk Indonesia."</p>
+             </div>
+            </div><!-- Investigasi Header -->
+            <div class="text-center"><span class="bg-red-100 text-red-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm border border-red-200">🔍 Laporan Investigasi</span>
+             <h3 class="text-2xl font-bold text-gray-800 mt-3">Mengapa Hal Tersebut Bisa Terjadi?</h3>
+             <p class="text-sm text-gray-600 mt-2 max-w-2xl mx-auto leading-relaxed">Penyebab utamanya adalah deterjen sintetis generasi pertama (ABS) yang <strong>non-biodegradable</strong>. Mengapa bakteri pengurai tidak bisa mencernanya? Jawabannya ada pada <span class="text-purple-600 font-bold">Struktur Rantai Karbon</span>.</p>
+            </div><!-- Comparison Cards (ABS vs LAS) -->
+            <div class="grid md:grid-cols-2 gap-6"><!-- ABS Card -->
+             <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-5 hover:shadow-xl transition-all relative overflow-hidden group">
+              <div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md">
+               TERSANGKA 🚫
+              </div>
+              <h4 class="text-xl font-black text-red-800 mb-1">A. ABS</h4>
+              <p class="text-xs text-red-600 font-semibold mb-4 tracking-wide">Alkyl Benzene Sulfonate</p>
+              <div class="space-y-3">
+               <div class="bg-white p-3 rounded-xl border border-red-100 shadow-sm">
+                <p class="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Struktur Kimia</p>
+                <p class="text-sm text-gray-800 font-medium">Rantai alkil yang <span class="bg-red-100 text-red-800 px-1 rounded">bercabang-cabang</span> (polimerisasi propilena).</p>
+               </div>
+               <div class="bg-white p-3 rounded-xl border border-red-100 shadow-sm">
+                <p class="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Posisi Atom Karbon</p>
+                <p class="text-sm text-gray-800 font-medium">Titik percabangan mengandung <strong>Atom C Tersier (3°)</strong> dan <strong>Kuarterner (4°)</strong>.</p>
+               </div>
+               <div class="bg-red-100 p-3 rounded-xl border border-red-200">
+                <p class="text-[10px] font-bold text-red-700 mb-1 uppercase flex items-center gap-1">⚠️ Mekanisme Kegagalan</p>
+                <p class="text-xs text-red-800 leading-relaxed">Atom C Kuarterner menciptakan <strong>Halangan Ruang (Steric Hindrance)</strong>. Ini memblokir akses enzim bakteri sehingga rantai karbon <strong>TIDAK BISA DIPOTONG</strong> (Beta-Oksidasi Gagal). Akibatnya: Limbah abadi.</p>
+               </div>
+              </div>
+             </div><!-- LAS Card -->
+             <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-5 hover:shadow-xl transition-all relative overflow-hidden group">
+              <div class="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md">
+               SOLUSI ✅
+              </div>
+              <h4 class="text-xl font-black text-green-800 mb-1">B. LAS</h4>
+              <p class="text-xs text-green-600 font-semibold mb-4 tracking-wide">Linear Alkylbenzene Sulfonate</p>
+              <div class="space-y-3">
+               <div class="bg-white p-3 rounded-xl border border-green-100 shadow-sm">
+                <p class="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Struktur Kimia</p>
+                <p class="text-sm text-gray-800 font-medium">Rantai alkil yang <span class="bg-green-100 text-green-800 px-1 rounded">lurus memanjang (linear)</span>.</p>
+               </div>
+               <div class="bg-white p-3 rounded-xl border border-green-100 shadow-sm">
+                <p class="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Posisi Atom Karbon</p>
+                <p class="text-sm text-gray-800 font-medium">Didominasi deretan <strong>Atom C Sekunder (2°)</strong> dan ujung <strong>Primer (1°)</strong>.</p>
+               </div>
+               <div class="bg-green-100 p-3 rounded-xl border border-green-200">
+                <p class="text-[10px] font-bold text-green-700 mb-1 uppercase flex items-center gap-1">✅ Mekanisme Sukses</p>
+                <p class="text-xs text-green-800 leading-relaxed">Karena strukturnya lurus dan terbuka, enzim bakteri mudah menempel dan memotong ikatan antar-Atom C Sekunder. <strong>Terurai (Biodegradable)</strong> dalam waktu singkat.</p>
+               </div>
+              </div>
+             </div>
+            </div><!-- Roleplay Section -->
+            <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-3xl p-6 md:p-8 text-white relative overflow-hidden shadow-2xl mt-8">
+             <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+             <div class="relative z-10">
+              <div class="flex items-center gap-4 mb-6">
+               <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-4xl shadow-lg border border-white/20">
+                🏭
+               </div>
+               <div>
+                <h3 class="text-xl font-bold text-white">Tantangan untuk kamu!</h3>
+                <p class="text-indigo-200 text-sm">Sebagai pemilik pabrik, strategi apa yang akan kamu lakukan untuk menyelamatkan lingkungan sekaligus menjaga profit bisnis?</p>
+               </div>
+              </div>
+              <div class="bg-white/10 p-5 rounded-2xl border border-white/10 mb-6 backdrop-blur-sm">
+               <p class="text-sm text-indigo-50 mb-3 leading-relaxed font-medium">Ilmuwan menyarankan beralih ke LAS karena ABS merusak lingkungan (akibat adanya atom C kuarterner yang sulit diputus). Tapi Anda menghadapi dilema berat:</p>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-black/20 p-3 rounded-xl">
+                 <p class="text-xs text-yellow-300 font-bold mb-1">💰 FAKTOR EKONOMI</p>
+                 <p class="text-xs text-white/80">Bahan baku ABS murah (dari limbah penyulingan minyak). Sementara itu, sintesis LAS membutuhkan teknologi baru = <strong>Biaya Produksi Melonjak 📈</strong></p>
+                </div>
+                <div class="bg-black/20 p-3 rounded-xl">
+                 <p class="text-xs text-pink-300 font-bold mb-1">🛁 FAKTOR SOSIAL</p>
+                 <p class="text-xs text-white/80">Konsumen percaya "Busa Banyak = Bersih". Deterjen ABS memiliki karakteristik busa yang melimpah and stabil, sedangkan deterjen LAS murni menghasilkan busa yang lebih sedikit, tetapi tetap mempertahankan efektivitas pembersihan yang optimal.</p>
+                </div>
+               </div>
+              </div>
+              <h4 class="font-bold text-white text-center mb-4 text-sm uppercase tracking-widest opacity-90">Pilih Strategi Anda:</h4>
+              <div class="grid gap-3"><button onclick="selectStrategy('A')" class="strategy-btn w-full text-left p-4 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 hover:border-white/30 transition-all flex items-start gap-4 group">
+                <div class="bg-gradient-to-br from-red-500 to-red-600 w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 group-hover:scale-110 shadow-lg transition-transform border border-white/20">
+                 A
+                </div>
+                <div>
+                 <p class="font-bold text-white text-sm group-hover:text-red-300 transition-colors">Tetap memproduksi deterjen ABS</p>
+                 <p class="text-xs text-indigo-200 mt-1 leading-snug">Pertahankan harga murah &amp; busa melimpah. Abaikan dampak lingkungan.</p>
+                </div></button> <button onclick="selectStrategy('B')" class="strategy-btn w-full text-left p-4 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 hover:border-white/30 transition-all flex items-start gap-4 group">
+                <div class="bg-gradient-to-br from-green-500 to-green-600 w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 group-hover:scale-110 shadow-lg transition-transform border border-white/20">
+                 B
+                </div>
+                <div>
+                 <p class="font-bold text-white text-sm group-hover:text-green-300 transition-colors">Beralih total ke LAS Murni</p>
+                 <p class="text-xs text-indigo-200 mt-1 leading-snug">Selamatkan lingkungan total. Risiko produk tidak laku karena mahal &amp; tidak berbusa.</p>
+                </div></button> <button onclick="selectStrategy('C')" class="strategy-btn w-full text-left p-4 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 hover:border-white/30 transition-all flex items-start gap-4 group">
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 group-hover:scale-110 shadow-lg transition-transform border border-white/20">
+                 C
+                </div>
+                <div>
+                 <p class="font-bold text-white text-sm group-hover:text-blue-300 transition-colors">LAS + Reformulasi (Additives)</p>
+                 <p class="text-xs text-indigo-200 mt-1 leading-snug">Pakai LAS (ramah lingkungan) + tambah zat pembusa. Biaya produksi paling tinggi.</p>
+                </div></button>
+              </div><!-- Feedback Area -->
+              <div id="strategyFeedback" class="mt-6 hidden bg-white text-gray-900 p-6 rounded-2xl animate-fadeIn shadow-2xl relative">
+               <div id="feedbackIcon" class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg border-4 border-indigo-900"></div>
+               <h5 id="feedbackTitle" class="font-bold text-lg mb-2 text-center mt-2"></h5>
+               <p id="feedbackText" class="text-sm leading-relaxed text-center text-gray-700"></p>
+              </div>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </main>
+    </div>
+   </div>
+  </div><!-- Modal -->
+  <div id="modalOverlay" class="modal-overlay">
+   <div class="modal-content"><button class="modal-close" id="modalClose">
+     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+     </svg></button>
+    <div id="modalBody"></div>
+   </div>
+  </div>
+  <script>
+    let currentTab = 1;
+    let sidebarOpen = true;
+    let hasAnswered = false;
+    
+    const sidebar = document.getElementById('sidebar');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+    const modalBody = document.getElementById('modalBody');
+    const factBox = document.getElementById('factBox');
+    const answerBedaBeda = document.getElementById('answerBedaBeda');
+    const answerSama = document.getElementById('answerSama');
+    
+    const diamondCard = document.getElementById('diamondCard');
+    const graphiteCard = document.getElementById('graphiteCard');
+    
+    if (diamondCard) {
+      diamondCard.addEventListener('click', () => {
+        diamondCard.classList.toggle('flipped');
+      });
+    }
+    
+    if (graphiteCard) {
+      graphiteCard.addEventListener('click', () => {
+        graphiteCard.classList.toggle('flipped');
+      });
+    }
+    
+    // Carbon Position Interactive - IMPROVED HIGHLIGHTING with HIDDEN explanation
+    document.querySelectorAll('.carbon-label').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const type = this.dataset.type;
+        const explanation = document.getElementById('carbon-explanation');
+        
+        // --- LOGIKA BARU: Highlight Tombol ---
+        // 1. Hapus kelas active-btn dari semua tombol
+        document.querySelectorAll('.carbon-label').forEach(b => b.classList.remove('active-btn'));
+        // 2. Tambahkan kelas active-btn ke tombol yang diklik
+        this.classList.add('active-btn');
+        
+        document.querySelectorAll('.carbon-atom').forEach(atom => {
+          atom.classList.remove('active');
+          if (atom.dataset.type === type) {
+            atom.classList.add('active');
+            const colorMap = { primer: '#fbbf24', sekunder: '#34d399', tersier: '#60a5fa', kuarterner: '#a78bfa' };
+            atom.setAttribute('fill', colorMap[type]);
+          } else {
+            atom.setAttribute('fill', '#34d399');
+          }
+        });
+        
+        const explanations = {
+          primer: '<div class="grid md:grid-cols-2 gap-3"><div class="bg-yellow-100 rounded-lg p-3 border-l-4 border-yellow-600"><p class="text-xs font-bold text-yellow-800 mb-1">🟡 DEFINISI</p><p class="text-xs text-yellow-700">Terikat pada 1 atom C lain</p></div><div class="bg-yellow-100 rounded-lg p-3 border-l-4 border-yellow-600"><p class="text-xs font-bold text-yellow-800 mb-1">📍 POSISI</p><p class="text-xs text-yellow-700">Ujung/terminal rantai</p></div></div><div class="mt-2 bg-yellow-50 rounded-lg p-3 border border-yellow-300"><p class="text-xs font-bold text-yellow-700 mb-1">💬 CONTOH:</p><p class="text-xs text-yellow-800 font-mono">CH₃– (kelompok metil)</p></div>',
+          sekunder: '<div class="grid md:grid-cols-2 gap-3"><div class="bg-green-100 rounded-lg p-3 border-l-4 border-green-600"><p class="text-xs font-bold text-green-800 mb-1">🟢 DEFINISI</p><p class="text-xs text-green-700">Terikat pada 2 atom C lain</p></div><div class="bg-green-100 rounded-lg p-3 border-l-4 border-green-600"><p class="text-xs font-bold text-green-800 mb-1">📍 POSISI</p><p class="text-xs text-green-700">Tengah rantai linear</p></div></div><div class="mt-2 bg-green-50 rounded-lg p-3 border border-green-300"><p class="text-xs font-bold text-green-700 mb-1">💬 CONTOH:</p><p class="text-xs text-green-800 font-mono">–CH– (rantai tengah)</p></div>',
+          tersier: '<div class="grid md:grid-cols-2 gap-3"><div class="bg-blue-100 rounded-lg p-3 border-l-4 border-blue-600"><p class="text-xs font-bold text-blue-800 mb-1">🔵 DEFINISI</p><p class="text-xs text-blue-700">Terikat pada 3 atom C lain</p></div><div class="bg-blue-100 rounded-lg p-3 border-l-4 border-blue-600"><p class="text-xs font-bold text-blue-800 mb-1">📍 POSISI</p><p class="text-xs text-blue-700">Titik percabangan</p></div></div><div class="mt-2 bg-blue-50 rounded-lg p-3 border border-blue-300"><p class="text-xs font-bold text-blue-700 mb-1">💬 CONTOH:</p><p class="text-xs text-blue-800 font-mono">–CH–(3 cabang)</p></div>',
+          kuarterner: '<div class="grid md:grid-cols-2 gap-3"><div class="bg-purple-100 rounded-lg p-3 border-l-4 border-purple-600"><p class="text-xs font-bold text-purple-800 mb-1">🟣 DEFINISI</p><p class="text-xs text-purple-700">Terikat pada 4 atom C lain</p></div><div class="bg-purple-100 rounded-lg p-3 border-l-4 border-purple-600"><p class="text-xs font-bold text-purple-800 mb-1">📍 POSISI</p><p class="text-xs text-purple-700">Pusat percabangan</p></div></div><div class="mt-2 bg-purple-50 rounded-lg p-3 border border-purple-300"><p class="text-xs font-bold text-purple-700 mb-1">💬 CONTOH:</p><p class="text-xs text-purple-800 font-mono">–C– (4 cabang)</p></div>'
+        };
+        
+        explanation.innerHTML = '<p style="margin: 0; color: #555; line-height: 1.6; font-size: 13px;">' + explanations[type] + '</p>';
+        explanation.classList.add('show');
+      });
+    });
+
+    // Make atoms clickable too
+    document.querySelectorAll('.carbon-atom').forEach(atom => {
+      atom.addEventListener('click', function() {
+        const type = this.dataset.type;
+        // Trigger the corresponding button click
+        const btn = document.querySelector(`.carbon-label[data-type="${type}"]`);
+        if (btn) btn.click();
+      });
+    });
+    
+    function toggleRiverCard() {
+      const riverCardBody = document.getElementById('riverCardBody');
+      const riverCardExpand = document.getElementById('riverCardExpand');
+      
+      riverCardBody.classList.toggle('open');
+      riverCardExpand.classList.toggle('open');
+    }
+    
+    function selectStrategy(option) {
+      const feedbackBox = document.getElementById('strategyFeedback');
+      const title = document.getElementById('feedbackTitle');
+      const text = document.getElementById('feedbackText');
+      const icon = document.getElementById('feedbackIcon');
+      
+      feedbackBox.classList.remove('hidden');
+      // Reset animation
+      feedbackBox.classList.remove('animate-fadeIn');
+      void feedbackBox.offsetWidth; // trigger reflow
+      feedbackBox.classList.add('animate-fadeIn');
+      
+      if (option === 'A') {
+          title.textContent = "❌ Keputusan Berisiko!";
+          title.className = "font-bold text-lg mb-2 text-center mt-2 text-red-700";
+          text.innerHTML = "Bisnis Anda lancar sesaat, tapi sungai semakin tercemar parah. Pemerintah kemudian melarang ABS secara total, dan pabrik Anda didenda besar/ditutup karena merusak lingkungan.";
+          icon.textContent = "💀";
+          icon.className = "absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg border-4 border-white bg-red-100";
+          feedbackBox.style.borderTop = "4px solid #ef4444";
+      } else if (option === 'B') {
+          title.textContent = "⚠️ Niat Baik, Eksekusi Kurang Tepat";
+          title.className = "font-bold text-lg mb-2 text-center mt-2 text-yellow-700";
+          text.innerHTML = "Sungai menjadi bersih! Namun, konsumen lari ke kompetitor karena mengira deterjen Anda tidak ampuh (kurang busa). Pabrik Anda mengalami kerugian besar.";
+          icon.textContent = "📉";
+          icon.className = "absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg border-4 border-white bg-yellow-100";
+          feedbackBox.style.borderTop = "4px solid #eab308";
+      } else if (option === 'C') {
+          title.textContent = "🏆 Solusi Sempurna! (Win-Win Solution)";
+          title.className = "font-bold text-lg mb-2 text-center mt-2 text-green-700";
+          text.innerHTML = "Cerdas! Anda menyelamatkan lingkungan dengan bahan dasar LAS. Penambahan zat pembusa membuat konsumen tetap puas. Meski profit margin sedikit turun diawal, Anda memenangkan loyalitas pasar jangka panjang dan reputasi 'Eco-Friendly'!";
+          icon.textContent = "🌟";
+          icon.className = "absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg border-4 border-white bg-green-100";
+          feedbackBox.style.borderTop = "4px solid #22c55e";
+      }
+      
+      // Scroll to feedback
+      setTimeout(() => {
+        feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+
+    function toggleAccordion(button) {
+      const content = button.nextElementSibling;
+      const icon = button.querySelector('svg');
+      
+      // Logika baru: Cukup toggle class 'open' pada elemen yang diklik saja.
+      // Tidak perlu menutup elemen accordion-content lainnya.
+      content.classList.toggle('open');
+      
+      // Rotasi ikon panah agar visualnya sesuai
+      if (icon) {
+        if (content.classList.contains('open')) {
+          icon.style.transform = 'rotate(180deg)';
+        } else {
+          icon.style.transform = 'rotate(0deg)';
+        }
+      }
+    }
+    
+    hamburgerBtn.addEventListener('click', () => {
+      sidebarOpen = !sidebarOpen;
+      sidebar.classList.toggle('collapsed');
+    });
+    
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.dataset.tab);
+      });
+    });
+
+    function switchTab(tabNum) {
+      const numTab = parseInt(tabNum);
+      
+      // Update Header Title Logic
+      const headerTitle = document.getElementById('headerTitle');
+      const titles = {
+        1: "💎 Fenomena",
+        2: "📜 Sejarah",
+        3: "⚛️ Konsep"
+      };
+      if (headerTitle && titles[numTab]) {
+        headerTitle.textContent = titles[numTab];
+      }
+
+      tabButtons.forEach(btn => {
+        if (btn.dataset.tab === String(numTab)) { btn.classList.add('active'); } 
+        else { btn.classList.remove('active'); }
+      });
+      tabContents.forEach(content => {
+        content.classList.add('hidden');
+        content.classList.remove('content-slide');
+      });
+      const selectedTab = document.getElementById(`tab${numTab}`);
+      if (selectedTab) {
+        selectedTab.classList.remove('hidden');
+        setTimeout(() => { selectedTab.classList.add('content-slide'); }, 10);
+      }
+      
+      // Scroll to top of content area
+      const contentArea = document.getElementById('contentArea');
+      if (contentArea) {
+        contentArea.scrollTop = 0;
+      }
+
+      currentTab = numTab;
+      if (numTab !== 1) { hasAnswered = false; factBox.classList.add('hidden'); answerBedaBeda.classList.remove('selected'); answerSama.classList.remove('selected'); }
+    }
+    
+    answerBedaBeda.addEventListener('click', () => {
+      const feedback = document.getElementById('answerFeedback');
+      feedback.classList.remove('hidden');
+      feedback.innerHTML = `
+        <div class="bg-red-100 border-red-400 w-full rounded-lg p-4 flex items-start gap-3">
+          <span class="text-3xl flex-shrink-0">❌</span>
+          <div>
+            <p class="font-bold text-red-700 mb-1">Jawaban Salah!</p>
+            <p class="text-red-600 text-sm">Meskipun Intan dan Arang memiliki sifat BERBEDA secara dramatis, mereka sebenarnya tersusun dari unsur yang SAMA - yakni <strong>Atom Karbon (C)</strong>!</p>
+          </div>
+        </div>
+      `;
+      answerBedaBeda.classList.add('selected');
+      answerSama.classList.remove('selected');
+      showFactBox();
+    });
+    
+    answerSama.addEventListener('click', () => {
+      const feedback = document.getElementById('answerFeedback');
+      feedback.classList.remove('hidden');
+      feedback.innerHTML = `
+        <div class="bg-green-100 border-green-400 w-full rounded-lg p-4 flex items-start gap-3">
+          <span class="text-3xl flex-shrink-0">✅</span>
+          <div>
+            <p class="font-bold text-green-700 mb-1">Jawaban Benar!</p>
+            <p class="text-green-600 text-sm">Tepat sekali! Intan dan Arang keduanya terbuat dari <strong>Atom Karbon (C)</strong> yang sama. Perbedaan sifat mereka terjadi karena <strong>PERBEDAAN STRUKTUR KRISTAL</strong> - fenomena ini disebut <strong>ALOTROPI</strong>!</p>
+          </div>
+        </div>
+      `;
+      answerSama.classList.add('selected');
+      answerBedaBeda.classList.remove('selected');
+      showFactBox();
+    });
+    
+    function showFactBox() {
+      if (!hasAnswered) {
+        factBox.classList.remove('hidden');
+        factBox.classList.add('reveal-animation');
+        hasAnswered = true;
+        setTimeout(() => { factBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+      }
+    }
+    
+    function showModal(title, content) {
+      modalBody.innerHTML = `<div class="text-center"><h3 class="text-2xl font-bold text-gray-800 mb-4">${title}</h3><div class="text-gray-700 text-left leading-relaxed">${content}</div></div>`;
+      modalOverlay.classList.add('show');
+    }
+    
+    function closeModal() { modalOverlay.classList.remove('show'); }
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+    
+    const woehlerBtn = document.getElementById('woehlerBtn');
+    
+    if (woehlerBtn) {
+      woehlerBtn.addEventListener('click', () => {
+        showModal('Friedrich Wöhler (1800–1882)', 
+          `<div class="space-y-4"><div class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl p-6 text-white text-center shadow-lg"><div class="text-7xl mb-3">👨‍🔬</div><p class="text-2xl font-bold mb-2">Bapak Kimia Organik Modern</p><p class="text-purple-100 text-sm">Seorang Kimiawan Revolusioner</p></div><div class="bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl p-6 border-2 border-indigo-300"><p class="text-gray-800 leading-relaxed mb-4"><strong class="text-indigo-700">📖 Biografi:</strong> Seorang kimiawan Jerman yang dikenal as "Bapak Kimia Organik". Pada tahun 1828, ia mengguncang dunia sains dengan mematahkan teori gurunya sendiri tentang "Vis Vitalis".</p><p class="text-gray-800 leading-relaxed"><strong class="text-indigo-700">🎯 Pencapaian Terbesar:</strong> Ia membuktikan bahwa senyawa organik bisa dibuat dari benda mati di laboratorium, tanpa perlu "nyawa" atau kekuatan hidup dari makhluk.</p></div><div class="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl p-6 border-2 border-yellow-400 text-center"><div class="text-5xl mb-3">💥</div><p class="font-bold text-orange-800 text-lg mb-2">DAMPAK REVOLUSIONER</p><p class="text-gray-800 leading-relaxed">Penemuan ini <strong>MERUNTUHKAN TEORI VIS VITALIS</strong> dan membuktikan bahwa prinsip ikatan kovalen berlaku sama, baik pada benda mati maupun makhluk hidup. Inilah awal mula era <strong>Kimia Organik Modern</strong>!</p></div></div>`);
+      });
+    }
+    
+    function showTimelinePopup(nodeNum) {
+      const popupContent = {
+        1: {
+          title: '🔮 Mitos Kekuatan Gaib',
+          content: `<div class="space-y-5"><div class="bg-gradient-to-br from-orange-50 to-amber-600 text-white rounded-2xl p-6 text-center shadow-lg"><div class="text-6xl mb-3">🔮</div><p class="text-2xl font-bold mb-2">ERA MITOS</p><p class="text-orange-100 text-sm">Sebelum 1828</p></div><div class="bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl p-6 border-2 border-orange-300"><p class="text-gray-800 leading-relaxed mb-4">Hingga awal abad ke-19, ilmuwan menganut paham <strong>Vitalisme</strong>. Mereka meyakini bahwa senyawa organik memiliki <strong>"kekuatan hidup" (vis vitalis)</strong> yang unik dan hanya dapat terbentuk secara alami di dalam tubuh makhluk hidup.</p><p class="text-gray-800 leading-relaxed"><strong class="text-orange-700">Konsekuensinya:</strong> Sintesis senyawa organik dari benda mati (anorganik) di laboratorium dianggap mustahil dilakukan.</p></div></div>`
+        },
+        2: {
+          title: '💥 Eksperimen Pemanasan',
+          content: `<div class="space-y-5"><div class="bg-gradient-to-br from-pink-600 to-rose-600 text-white rounded-2xl p-6 text-center shadow-lg"><div class="text-6xl mb-3">💥</div><p class="text-2xl font-bold mb-2">TITIK BALIK (1828)</p><p class="text-pink-100 text-sm">Gebrakan Wöhler!</p></div><div class="bg-gradient-to-br from-pink-100 to-rose-100 rounded-2xl p-6 border-2 border-pink-300"><p class="text-gray-800 leading-relaxed mb-4"><strong class="text-pink-700">🌟 MITOS RUNTUH!</strong> Wöhler memanaskan <strong>Amonium Sianat (benda mati)</strong> dan menghasilkan <strong>UREA (senyawa organik)</strong>. Terbukti "nyawa" itu tidak ada!</p><div class="bg-white rounded-xl p-4 my-4 border-2 border-pink-400"><p class="text-sm font-bold text-gray-800 mb-2 text-center">⚗️ Reaksi Bersejarah:</p><p class="text-center font-mono font-bold text-gray-700 mb-1">NH₄OCN</p><p class="text-center text-gray-600 text-xs mb-3">↓ Dipanaskan</p><p class="text-center font-mono font-bold text-pink-700">CO(NH₂)₂</p><p class="text-center text-xs text-gray-600 mt-2">(Urea - Senyawa Organik!)</p></div><p class="text-gray-800 leading-relaxed"><strong class="text-green-700">✅ Kesimpulan:</strong> Senyawa organik DAPAT dibuat dari senyawa anorganik tanpa memerlukan "kekuatan hidup"!</p></div></div>`
+        },
+        3: {
+          title: '⚛️ Kimia Karbon',
+          content: `<div class="space-y-5"><div class="bg-gradient-to-br from-green-600 to-emerald-600 text-white rounded-2xl p-6 text-center shadow-lg"><div class="text-6xl mb-3">⚛️</div><p class="text-2xl font-bold mb-2">ERA MODERN</p><p class="text-green-100 text-sm">1850 - Sekarang</p></div><div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl p-6 border-2 border-green-300"><p class="text-gray-800 leading-relaxed mb-4"><strong class="text-green-700">📚 Perubahan Fundamental:</strong> Gugurnya paham Vitalisme mengubah dasar pengelompokan kimia. Definisi tidak lagi didasarkan pada <strong>asal-usul hayati</strong>, melainkan pada <strong>struktur kimianya</strong>.</p><div class="bg-white rounded-xl p-4 my-4 border-2 border-green-400"><p class="text-sm font-bold text-gray-800 mb-3 text-center">🎯 Definisi Baru Kimia Organik:</p><p class="text-gray-800 leading-relaxed text-center italic"><strong>"Cabang ilmu kimia yang mempelajari senyawa karbon - fokus pada struktur, sifat, komposisi, dan reaksinya."</strong></p></div><p class="text-gray-800 leading-relaxed"><strong class="text-green-700">🌟 Implikasi:</strong> Ribuan senyawa organik disintesis. Pengelompokan berdasarkan struktur kimia, bukan asal-usul. Kimia organik menjadi fondasi farmasi, polimer, dan bioteknologi modern!</p></div></div>`
+        }
+      };
+      
+      if (popupContent[nodeNum]) {
+        showModal(popupContent[nodeNum].title, popupContent[nodeNum].content);
+      }
+    }
+  </script>
+ </body>
+</html>

@@ -1,0 +1,2250 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembelajaran Interaktif Alkana</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <!-- SDK References -->
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4ECDC4 100%);
+    }
+    
+    .sidebar-gradient {
+      background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+    }
+    
+    .nav-btn {
+      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+    }
+    
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateX(5px);
+    }
+    
+    .nav-btn.active {
+      background: rgba(255,255,255,0.35);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      border-left: 4px solid #FFD93D;
+    }
+    
+    .content-slide {
+      animation: slideIn 0.4s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .popup-overlay {
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .popup-content {
+      animation: popIn 0.3s ease;
+    }
+    
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    /* Tombol Info Glow Pulse */
+    @keyframes glowPulse {
+      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); transform: scale(1); }
+      50% { box-shadow: 0 0 15px 5px rgba(99, 102, 241, 0.4); transform: scale(1.1); }
+      100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); transform: scale(1); }
+    }
+    .glow-btn {
+      animation: glowPulse 2s infinite ease-in-out;
+    }
+
+    .hover-card {
+      transition: all 0.3s ease;
+    }
+    
+    .hover-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .home-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .home-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(68, 168, 255, 0.4);
+    }
+    
+    .info-card {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e8f4f8 100%);
+    }
+    
+    .alkyl-card {
+      transition: all 0.3s ease;
+    }
+    
+    .alkyl-card:hover {
+      transform: scale(1.02);
+    }
+    
+    .interactive-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .interactive-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .interactive-btn:active {
+      transform: scale(0.98);
+    }
+    
+    /* Responsive Sidebar Utilities */
+    .sidebar-collapsed {
+      width: 0 !important;
+      padding: 0 !important;
+      overflow: hidden;
+    }
+    
+    /* Overlay sidebar on mobile instead of pushing content */
+    @media (max-width: 768px) {
+        #sidebar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50; /* Higher than header z-20 */
+            width: 80%; /* Wider on mobile for better touch targets */
+            max-width: 300px;
+        }
+        
+        /* Backdrop when sidebar is open on mobile */
+        #sidebar-backdrop {
+            display: block;
+        }
+        
+        #sidebar.sidebar-collapsed + #sidebar-backdrop {
+            display: none;
+        }
+    }
+
+    @media (min-width: 769px) {
+        #sidebar-backdrop {
+            display: none !important;
+        }
+    }
+    
+    .hamburger-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .hamburger-btn:hover {
+      background: rgba(102, 126, 234, 0.2);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+
+    .scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(102, 126, 234, 0.5) transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(102, 126, 234, 0.5);
+      border-radius: 3px;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-hidden">
+  <div id="app" class="h-full flex gradient-bg relative">
+    
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar-gradient h-full flex flex-col shadow-2xl transition-all duration-300 relative overflow-y-auto scroll-container sidebar-collapsed md:w-72 md:static md:sidebar-collapsed-no">
+      <!-- Sidebar Header -->
+      <div class="pt-6 pb-6 px-6">
+        <div class="flex items-center gap-3"><span class="text-3xl">📚</span>
+          <div>
+            <h1 id="mainTitle" class="text-2xl font-bold text-white">ALKANA</h1>
+            <p class="text-white/70 text-sm">Hidrokarbon Jenuh</p>
+          </div>
+        </div>
+      </div>
+      <!-- Navigation -->
+      <nav class="flex-1 px-4 pb-6 space-y-3">
+        <button onclick="switchTab(0)" id="navBtn0" class="nav-btn active w-full text-left px-4 py-4 rounded-2xl text-white font-medium flex items-center gap-3"> <span class="text-xl">🔬</span> <span class="text-sm">Mengenal Senyawa</span> </button> 
+        <button onclick="switchTab(1)" id="navBtn1" class="nav-btn w-full text-left px-4 py-4 rounded-2xl text-white font-medium flex items-center gap-3"> <span class="text-xl">📝</span> <span class="text-sm">Tata Nama Alkana</span> </button> 
+        <button onclick="switchTab(2)" id="navBtn2" class="nav-btn w-full text-left px-4 py-4 rounded-2xl text-white font-medium flex items-center gap-3"> <span class="text-xl">⚗️</span> <span class="text-sm">Sifat Alkana</span> </button> 
+        <button onclick="switchTab(3)" id="navBtn3" class="nav-btn w-full text-left px-4 py-4 rounded-2xl text-white font-medium flex items-center gap-3"> <span class="text-xl">🔀</span> <span class="text-sm">Isomer Alkana</span> </button> 
+      </nav>
+      <!-- Sidebar Footer -->
+      <div class="px-6 py-4 border-t border-white/20">
+        <p class="text-white/60 text-xs text-center">🎓 Pembelajaran Interaktif</p>
+      </div>
+    </aside>
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"></div>
+    
+    <!-- Main Content Area -->
+    <div class="flex-1 h-full flex flex-col transition-all duration-300 relative overflow-hidden w-full">
+      
+      <!-- Pinned Header (Fixed at top) -->
+      <header class="relative pt-3 px-4 pb-2 shrink-0 z-20">
+        <div class="bg-gradient-to-r from-[#667eea] via-[#764ba2] to-[#4ECDC4] rounded-2xl p-3 shadow-lg text-center relative">
+            <!-- Sidebar Toggle Button -->
+            <button id="hamburgerBtn" onclick="toggleSidebar()" class="hamburger-btn absolute top-1/2 transform -translate-y-1/2 left-3 w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-xl font-bold shadow-md hover:bg-white/30 transition-all duration-300"> ☰ </button>
+            
+            <!-- Dynamic Header Content with Responsive Padding -->
+            <div class="px-14 md:px-12">
+                <h1 id="headerTitle" class="text-lg md:text-xl font-extrabold text-white mb-0.5 tracking-tight leading-tight">Mengenal Senyawa Alkana</h1>
+                <p id="headerSubtitle" class="text-xs md:text-sm text-white font-medium opacity-90 hidden sm:block">Dasar-dasar hidrokarbon jenuh</p>
+            </div>
+
+            <!-- Home Button (Link to eksplorasi.html) --> 
+            <a href="eksplorasi.html" class="home-btn absolute top-1/2 transform -translate-y-1/2 right-3 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white/30 transition-all duration-300">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+              </svg>
+            </a>
+        </div>
+      </header>
+      
+      <!-- Scrollable Content Container -->
+      <main id="mainContent" class="flex-1 overflow-auto scroll-container relative px-4 md:px-6 pb-6 z-10 w-full">
+          
+          <!-- TAB 0: MENGENAL -->
+          <div id="tab0" class="tab-content active content-slide">
+            <!-- Header Card -->
+            <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <!-- Pengertian -->
+              <div class="info-card rounded-2xl p-6 mb-6">
+                <h3 class="text-lg font-bold text-[#667eea] mb-3 flex items-center gap-2">📖 Pengertian Alkana</h3>
+                <p class="text-gray-700 leading-relaxed text-justify"><strong>Alkana</strong> adalah senyawa hidrokarbon jenuh yang hanya memiliki <span class="bg-[#FFD93D]/30 px-2 py-1 rounded-lg font-semibold">ikatan tunggal (C-C)</span> antar atom karbon. Disebut "<span class="bg-[#FFD93D]/50 px-1 rounded font-medium text-gray-800">jenuh</span>" karena setiap atom karbon telah mengikat atom hidrogen dalam jumlah maksimal sehingga tidak ada lagi ruang untuk penambahan atom lain.</p>
+              </div>
+              <!-- Rumus Umum -->
+              <div class="bg-gradient-to-r from-[#4ECDC4]/20 to-[#44A8FF]/20 rounded-2xl p-6 mb-6">
+                <h3 class="text-lg font-bold text-[#4ECDC4] mb-4 flex items-center gap-2">🧮 Rumus Umum Alkana</h3>
+                <div class="bg-white rounded-xl p-6 text-center shadow-inner"><span class="text-4xl font-bold bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent"> CₙH₂ₙ₊₂ </span>
+                  <p class="text-gray-600 mt-3">dimana <strong>n</strong> = jumlah atom karbon (n ≥ 1)</p>
+                </div>
+              </div>
+            </div>
+            <!-- Deret Homolog -->
+            <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">📊 Deret Homolog Alkana</h3>
+              <p class="text-gray-600 mb-6 text-justify">Deret homolog adalah kelompok senyawa dengan rumus umum sama, <span class="bg-[#FFD93D]/50 px-1 rounded font-medium text-gray-800">berbeda CH₂ antar suku</span> berurutan.</p>
+              <div class="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+                <table class="w-full text-sm min-w-[500px]">
+                  <thead>
+                    <tr class="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white">
+                      <th class="px-4 py-3 rounded-tl-xl text-left">Nama</th>
+                      <th class="px-4 py-3">Rumus</th>
+                      <th class="px-4 py-3">n</th>
+                      <th class="px-4 py-3">Wujud</th>
+                      <th class="px-4 py-3 rounded-tr-xl">Titik Didih</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="bg-blue-50/50 hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Metana</td>
+                      <td class="px-4 py-3 text-center">CH₄</td>
+                      <td class="px-4 py-3 text-center">1</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#7FD8BE]/30 px-2 py-1 rounded-full text-xs">💨 Gas</span></td>
+                      <td class="px-4 py-3 text-center">-162°C</td>
+                    </tr>
+                    <tr class="bg-white hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Etana</td>
+                      <td class="px-4 py-3 text-center">C₂H₆</td>
+                      <td class="px-4 py-3 text-center">2</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#7FD8BE]/30 px-2 py-1 rounded-full text-xs">💨 Gas</span></td>
+                      <td class="px-4 py-3 text-center">-89°C</td>
+                    </tr>
+                    <tr class="bg-blue-50/50 hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Propana</td>
+                      <td class="px-4 py-3 text-center">C₃H₈</td>
+                      <td class="px-4 py-3 text-center">3</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#7FD8BE]/30 px-2 py-1 rounded-full text-xs">💨 Gas</span></td>
+                      <td class="px-4 py-3 text-center">-42°C</td>
+                    </tr>
+                    <tr class="bg-white hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Butana</td>
+                      <td class="px-4 py-3 text-center">C₄H₁₀</td>
+                      <td class="px-4 py-3 text-center">4</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#7FD8BE]/30 px-2 py-1 rounded-full text-xs">💨 Gas</span></td>
+                      <td class="px-4 py-3 text-center">-0.5°C</td>
+                    </tr>
+                    <tr class="bg-blue-50/50 hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Pentana</td>
+                      <td class="px-4 py-3 text-center">C₅H₁₂</td>
+                      <td class="px-4 py-3 text-center">5</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#44A8FF]/30 px-2 py-1 rounded-full text-xs">💧 Cair</span></td>
+                      <td class="px-4 py-3 text-center">36°C</td>
+                    </tr>
+                    <tr class="bg-white hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Heksana</td>
+                      <td class="px-4 py-3 text-center">C₆H₁₄</td>
+                      <td class="px-4 py-3 text-center">6</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#44A8FF]/30 px-2 py-1 rounded-full text-xs">💧 Cair</span></td>
+                      <td class="px-4 py-3 text-center">69°C</td>
+                    </tr>
+                    <tr class="bg-blue-50/50 hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Heptana</td>
+                      <td class="px-4 py-3 text-center">C₇H₁₆</td>
+                      <td class="px-4 py-3 text-center">7</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#44A8FF]/30 px-2 py-1 rounded-full text-xs">💧 Cair</span></td>
+                      <td class="px-4 py-3 text-center">98°C</td>
+                    </tr>
+                    <tr class="bg-white hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Oktana</td>
+                      <td class="px-4 py-3 text-center">C₈H₁₈</td>
+                      <td class="px-4 py-3 text-center">8</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#44A8FF]/30 px-2 py-1 rounded-full text-xs">💧 Cair</span></td>
+                      <td class="px-4 py-3 text-center">126°C</td>
+                    </tr>
+                    <tr class="bg-blue-50/50 hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Nonana</td>
+                      <td class="px-4 py-3 text-center">C₉H₂₀</td>
+                      <td class="px-4 py-3 text-center">9</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#44A8FF]/30 px-2 py-1 rounded-full text-xs">💧 Cair</span></td>
+                      <td class="px-4 py-3 text-center">151°C</td>
+                    </tr>
+                    <tr class="bg-white hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium">Dekana</td>
+                      <td class="px-4 py-3 text-center">C₁₀H₂₂</td>
+                      <td class="px-4 py-3 text-center">10</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#44A8FF]/30 px-2 py-1 rounded-full text-xs">💧 Cair</span></td>
+                      <td class="px-4 py-3 text-center">174°C</td>
+                    </tr>
+                    <tr class="bg-blue-50/50 hover:bg-blue-100/50 transition-colors">
+                      <td class="px-4 py-3 font-medium rounded-bl-xl">C₁₈+</td>
+                      <td class="px-4 py-3 text-center">-</td>
+                      <td class="px-4 py-3 text-center">18+</td>
+                      <td class="px-4 py-3 text-center"><span class="bg-[#764ba2]/30 px-2 py-1 rounded-full text-xs">🧱 Padat</span></td>
+                      <td class="px-4 py-3 text-center rounded-br-xl">&gt;300°C</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="mt-3 text-xs text-gray-500 italic text-center">* Wujud zat tersebut diukur pada Suhu Ruang (25°C) dan Tekanan 1 atm.</p>
+            </div>
+            <!-- Gugus Alkil -->
+            <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">🔗 Gugus Alkil</h3>
+              <p class="text-gray-600 mb-2">Gugus alkil terbentuk ketika alkana kehilangan 1 atom hidrogen. <span class="bg-[#FFD93D]/50 px-1 rounded font-medium text-gray-800">Rumus: <strong>C<sub>n</sub>H<sub>2n+1</sub></strong></span> atau ditulis <strong>-R</strong></p>
+              <p class="text-gray-600 mb-6">Penamaan: Ganti akhiran <strong>"-ana"</strong> menjadi <strong>"-il"</strong></p>
+              <!-- Alkil Primer (Rantai Lurus) -->
+              <div class="mb-6">
+                <h4 class="font-bold text-[#667eea] mb-4 flex items-center gap-2"><span class="bg-[#667eea] text-white px-2 py-1 rounded-lg text-xs">PRIMER</span> Gugus Alkil Rantai Lurus</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="alkyl-card bg-gradient-to-br from-[#FFD93D]/20 to-[#FFA500]/20 rounded-xl p-4 border-2 border-[#FFD93D]/30">
+                    <p class="font-bold text-[#FFA500] text-lg mb-2">Metil</p>
+                    <p class="font-mono text-sm text-gray-700 bg-white rounded-lg p-3 mb-2">-CH₃</p>
+                    <p class="text-xs text-gray-500">Dari metana (CH₄)</p>
+                  </div>
+                  <div class="alkyl-card bg-gradient-to-br from-[#4ECDC4]/20 to-[#44A8FF]/20 rounded-xl p-4 border-2 border-[#4ECDC4]/30">
+                    <p class="font-bold text-[#4ECDC4] text-lg mb-2">Etil</p>
+                    <p class="font-mono text-sm text-gray-700 bg-white rounded-lg p-3 mb-2">CH₃-CH₂-</p>
+                    <p class="text-xs text-gray-500">Dari etana (C₂H₆)</p>
+                  </div>
+                  <div class="alkyl-card bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-xl p-4 border-2 border-[#667eea]/30">
+                    <p class="font-bold text-[#667eea] text-lg mb-2">n-Propil</p>
+                    <p class="font-mono text-sm text-gray-700 bg-white rounded-lg p-3 mb-2">CH₃-CH₂-CH₂-</p>
+                    <p class="text-xs text-gray-500">Dari propana (C₃H₈)</p>
+                  </div>
+                  <div class="alkyl-card bg-gradient-to-br from-[#7FD8BE]/20 to-[#4ECDC4]/20 rounded-xl p-4 border-2 border-[#7FD8BE]/30">
+                    <p class="font-bold text-[#7FD8BE] text-lg mb-2">n-Butil</p>
+                    <p class="font-mono text-sm text-gray-700 bg-white rounded-lg p-3 mb-2">CH₃-CH₂-CH₂-CH₂-</p>
+                    <p class="text-xs text-gray-500">Dari butana (C₄H₁₀)</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Alkil Sekunder dan Tersier -->
+              <div>
+                <h4 class="font-bold text-[#764ba2] mb-4 flex items-center gap-2"><span class="bg-[#764ba2] text-white px-2 py-1 rounded-lg text-xs">BERCABANG</span> Gugus Alkil Rantai Bercabang</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Isopropil -->
+                  <div class="alkyl-card bg-gradient-to-br from-[#FFD93D]/30 to-[#FFA500]/30 rounded-xl p-4 border-2 border-[#FFA500]/40">
+                    <p class="font-bold text-[#FFA500] text-lg mb-2">Isopropil</p>
+                    <div class="bg-white rounded-lg p-3 mb-2 flex items-center justify-center"><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-10%20193728.png?raw=true" alt="Struktur Isopropil" class="max-w-full h-auto" style="max-height: 80px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                      <div style="display:none;" class="font-mono text-sm text-gray-700 text-center">
+                        CH₃<br>
+                        |<br>
+                        CH-<br>
+                        |<br>
+                        CH₃
+                      </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Cabang di C tengah</p>
+                  </div>
+                  <!-- Isobutil -->
+                  <div class="alkyl-card bg-gradient-to-br from-[#4ECDC4]/30 to-[#44A8FF]/30 rounded-xl p-4 border-2 border-[#4ECDC4]/40">
+                    <p class="font-bold text-[#4ECDC4] text-lg mb-2">Isobutil</p>
+                    <div class="bg-white rounded-lg p-3 mb-2 flex items-center justify-center"><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-10%20154341.png?raw=true" alt="Struktur Isobutil" class="max-w-full h-auto" style="max-height: 80px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                      <div style="display:none;" class="font-mono text-sm text-gray-700 text-center">
+                        CH₃<br>
+                        |<br>
+                        CH-CH₂-<br>
+                        |<br>
+                        CH₃
+                      </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Cabang metil di C-2</p>
+                  </div>
+                  <!-- Sekunder Butil -->
+                  <div class="alkyl-card bg-gradient-to-br from-[#667eea]/30 to-[#764ba2]/30 rounded-xl p-4 border-2 border-[#667eea]/40">
+                    <p class="font-bold text-[#667eea] text-lg mb-2">sec-Butil (s-butil)</p>
+                    <div class="bg-white rounded-lg p-3 mb-2 flex items-center justify-center"><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-10%20154421.png?raw=true" alt="Struktur sec-Butil" class="max-w-full h-auto" style="max-height: 80px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                      <div style="display:none;" class="font-mono text-sm text-gray-700 text-center">
+                        CH₃<br>
+                        |<br>
+                        CH-CH₂-CH₃<br>
+                        |<br>
+                        H
+                      </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Terikat pada C sekunder</p>
+                  </div>
+                  <!-- Tersier Butil -->
+                  <div class="alkyl-card bg-gradient-to-br from-[#7FD8BE]/30 to-[#4ECDC4]/30 rounded-xl p-4 border-2 border-[#7FD8BE]/40">
+                    <p class="font-bold text-[#7FD8BE] text-lg mb-2">tert-Butil (t-butil)</p>
+                    <div class="bg-white rounded-lg p-3 mb-2 flex items-center justify-center"><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-10%20154213.png?raw=true" alt="Struktur tert-Butil" class="max-w-full h-auto" style="max-height: 80px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                      <div style="display:none;" class="font-mono text-sm text-gray-700 text-center">
+                        CH₃<br>
+                        |<br>
+                        C-<br>
+                        / \<br>
+                        CH₃ CH₃
+                      </div>
+                    </div>
+                    <p class="text-xs text-gray-500 text-center mb-4">Terikat pada C tersier</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Info Box -->
+              <div class="mt-6 bg-[#667eea]/10 rounded-xl p-4">
+                <p class="text-sm text-gray-700"><strong>💡 Catatan:</strong> Atom C Primer terikat pada 1 C lain, Sekunder pada 2 C lain, Tersier pada 3 C lain.</p>
+              </div>
+            </div>
+            <!-- Pop-up Button: Tabung Gas -->
+            <div class="card-gradient rounded-3xl p-6 shadow-xl hover-card"><button onclick="openPopup('energyPopup')" class="w-full bg-gradient-to-r from-[#FFA500] to-[#FFD93D] rounded-2xl p-6 text-left hover:shadow-lg transition-all duration-300 group">
+                <div class="flex items-center gap-4">
+                  <div class="text-5xl group-hover:scale-110 transition-transform">
+                    🔥
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold text-white">Misteri Bunyi Cair dalam Tabung Gas 💭</h3>
+                    <p class="text-white/80 text-sm mt-1">Klik untuk membaca cerita menarik!</p>
+                  </div>
+                  <div class="ml-auto text-white text-2xl group-hover:translate-x-2 transition-transform">
+                    →
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+          
+          <!-- TAB 1: TATA NAMA -->
+          <div id="tab1" class="tab-content">
+            <!-- Header removed -->
+            <!-- Rantai Lurus -->
+            <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-white border-2 border-blue-100 rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-dashed border-[#667eea]/30">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center text-2xl shadow-md text-white shrink-0">
+                  ➡️
+                </div>
+                <div>
+                  <h3 class="text-xl md:text-2xl font-extrabold text-[#667eea]">Alkana Rantai Lurus</h3>
+                  <div class="h-1 w-24 bg-gradient-to-r from-[#667eea] to-transparent rounded-full mt-1"></div>
+                </div>
+              </div>
+              
+              <!-- Konten Langkah Penamaan Baru -->
+              <h4 class="text-lg font-bold text-gray-800 mb-4">📝 Cara Penamaan</h4>
+              
+              <div class="space-y-4 mb-6">
+                <!-- Step 1 -->
+                <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#667eea] shadow-sm">
+                  <div class="flex items-start gap-3">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#667eea] text-white font-bold text-xs mt-0.5 shrink-0">1</span>
+                    <div>
+                      <p class="font-bold text-gray-800">Hitung jumlah atom karbon (C)</p>
+                      <p class="text-sm text-gray-600">Pastikan semua C tersusun tanpa cabang</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#667eea] shadow-sm">
+                  <div class="flex items-start gap-3">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#667eea] text-white font-bold text-xs mt-0.5 shrink-0">2</span>
+                    <div>
+                      <p class="font-bold text-gray-800">Gunakan nama dasar sesuai jumlah C</p>
+                      <p class="text-sm text-gray-600">Met- (1C), Et- (2C), Prop- (3C), But- (4C), Pent- (5C), dst.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#667eea] shadow-sm">
+                  <div class="flex items-start gap-3">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#667eea] text-white font-bold text-xs mt-0.5 shrink-0">3</span>
+                    <div>
+                      <p class="font-bold text-gray-800">Tambahkan akhiran "-ana"</p>
+                      <p class="text-sm text-gray-600">Menunjukkan senyawa tersebut adalah alkana</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#667eea] shadow-sm">
+                  <div class="flex items-start gap-3">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#667eea] text-white font-bold text-xs mt-0.5 shrink-0">4</span>
+                    <div>
+                      <p class="font-bold text-gray-800">Tambahkan awalan "n-" (normal)</p>
+                      <p class="text-sm text-gray-600">Untuk menandakan alkana tersebut tanpa cabang.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Penegasan Ulang -->
+              <div class="bg-[#667eea]/10 rounded-xl p-4 text-center border-2 border-[#667eea] border-dashed mb-6">
+                <p class="font-bold text-[#667eea] text-lg">Rumus : <span class="bg-white px-3 py-1 rounded-lg ml-2 shadow-sm font-mono text-base md:text-lg">n-alkana</span></p>
+              </div>
+
+              <!-- Accordion Contoh Soal -->
+              <h4 class="text-lg font-bold text-[#4ECDC4] mb-4 flex items-center gap-2">📚 Contoh Soal Penamaan</h4>
+              <!-- Soal 1: n-Butana -->
+              <div class="mb-4"><button onclick="toggleAccordion('straight1')" class="w-full bg-gradient-to-r from-[#FFD93D]/20 to-[#FFA500]/20 hover:from-[#FFD93D]/30 hover:to-[#FFA500]/30 rounded-xl p-4 flex items-center justify-between transition-all duration-300">
+                  <div class="flex items-center gap-3"><span class="bg-[#FFA500] text-white px-3 py-1 rounded-lg font-bold">Soal 1</span> <span class="font-bold text-[#FFA500]">n-Butana</span>
+                  </div>
+                  <svg id="accordionIconstraight1" class="w-6 h-6 text-[#FFA500] transition-transform duration-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="accordionContentstraight1" class="hidden mt-4 space-y-4">
+                  <!-- Soal -->
+                  <div class="bg-gradient-to-r from-[#FFD93D]/10 to-[#FFA500]/10 rounded-2xl p-6">
+                    <p class="text-sm text-gray-600 mb-4 text-center">Tentukan nama IUPAC dari struktur berikut:</p>
+                    <div class="bg-white rounded-xl p-6 overflow-x-auto">
+                      <pre class="text-center font-mono text-sm leading-relaxed text-gray-700 min-w-max mx-auto">CH₃-CH₂-CH₂-CH₃</pre>
+                    </div>
+                  </div>
+                  <!-- Langkah 1 -->
+                  <div class="bg-[#667eea]/10 rounded-xl p-5">
+                    <h4 class="font-bold text-[#667eea] mb-3 flex items-center gap-2"><span class="bg-[#667eea] text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">1</span> Hitung Jumlah Atom Karbon</h4>
+                    <div class="bg-white rounded-lg p-4 mb-3 overflow-x-auto">
+                      <pre class="text-center font-mono text-sm text-gray-700 min-w-max mx-auto">CH₃-CH₂-CH₂-CH₃
+<span class="text-[#ff6363]">C   C   C   C</span>
+<span class="text-[#ff6363]">1   2   3   4</span></pre>
+                    </div>
+                    <p class="text-sm text-gray-600">✓ Total = <strong>4 atom karbon</strong></p>
+                  </div>
+                  <!-- Langkah 2 -->
+                  <div class="bg-[#4ECDC4]/10 rounded-xl p-5">
+                    <h4 class="font-bold text-[#4ECDC4] mb-3 flex items-center gap-2"><span class="bg-[#4ECDC4] text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">2</span> Tentukan Rantai</h4>
+                    <div class="bg-white rounded-lg p-4 mb-3">
+                      <p class="text-center text-gray-700">Semua karbon tersusun <strong class="text-[#4ECDC4]">LURUS</strong> tanpa cabang</p>
+                    </div>
+                    <p class="text-sm text-gray-600">✓ Rantai lurus → Gunakan awalan <strong>"n-"</strong> (normal)</p>
+                  </div>
+                  <!-- Langkah 3 -->
+                  <div class="bg-[#FFD93D]/10 rounded-xl p-5">
+                    <h4 class="font-bold text-[#FFA500] mb-3 flex items-center gap-2"><span class="bg-[#FFA500] text-gray-800 w-7 h-7 rounded-full flex items-center justify-center text-sm">3</span> Tulis Nama Sesuai Jumlah C</h4>
+                    <div class="bg-white rounded-lg p-4 mb-3">
+                      <p class="text-center text-gray-700 mb-3">4 karbon → awalan <strong class="text-[#FFA500]">"But"</strong></p>
+                      <p class="text-center text-gray-700">Akhiran alkana → <strong class="text-[#667eea]">"-ana"</strong></p>
+                      <p class="text-center text-2xl font-bold text-[#FFA500] mt-4">n-Butana</p>
+                    </div>
+                  </div>
+                  <!-- Kesimpulan -->
+                  <div class="bg-gradient-to-r from-[#7FD8BE]/20 to-[#4ECDC4]/20 rounded-xl p-5 border-2 border-[#7FD8BE]">
+                    <p class="text-center text-gray-700"><span class="text-2xl mr-2">🎯</span> <strong class="text-lg text-[#FFA500]">Jawaban: n-Butana (atau Butana)</strong></p>
+                  </div>
+                </div>
+              </div>
+              <!-- Soal 2: n-Pentana -->
+              <div class="mb-4"><button onclick="toggleAccordion('straight2')" class="w-full bg-gradient-to-r from-[#7FD8BE]/20 to-[#4ECDC4]/20 hover:from-[#7FD8BE]/30 hover:to-[#4ECDC4]/30 rounded-xl p-4 flex items-center justify-between transition-all duration-300">
+                  <div class="flex items-center gap-3"><span class="bg-[#7FD8BE] text-white px-3 py-1 rounded-lg font-bold">Soal 2</span> <span class="font-bold text-[#7FD8BE]">n-Pentana</span>
+                  </div>
+                  <svg id="accordionIconstraight2" class="w-6 h-6 text-[#7FD8BE] transition-transform duration-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="accordionContentstraight2" class="hidden mt-4 space-y-4">
+                  <!-- Soal -->
+                  <div class="bg-gradient-to-r from-[#7FD8BE]/10 to-[#4ECDC4]/10 rounded-2xl p-6">
+                    <p class="text-sm text-gray-600 mb-4 text-center">Tentukan nama IUPAC dari struktur berikut:</p>
+                    <div class="bg-white rounded-xl p-6 overflow-x-auto">
+                      <pre class="text-center font-mono text-sm leading-relaxed text-gray-700 min-w-max mx-auto">CH₃-CH₂-CH₂-CH₂-CH₃</pre>
+                    </div>
+                  </div>
+                  <!-- Langkah 1 -->
+                  <div class="bg-[#667eea]/10 rounded-xl p-5">
+                    <h4 class="font-bold text-[#667eea] mb-3 flex items-center gap-2"><span class="bg-[#667eea] text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">1</span> Hitung Jumlah Atom Karbon</h4>
+                    <div class="bg-white rounded-lg p-4 mb-3 overflow-x-auto">
+                      <pre class="text-center font-mono text-sm text-gray-700 min-w-max mx-auto">CH₃-CH₂-CH₂-CH₂-CH₃
+<span class="text-[#ff6363]">C   C   C   C   C</span>
+<span class="text-[#ff6363]">1   2   3   4   5</span></pre>
+                    </div>
+                    <p class="text-sm text-gray-600">✓ Total = <strong>5 atom karbon</strong></p>
+                  </div>
+                  <!-- Langkah 2 -->
+                  <div class="bg-[#4ECDC4]/10 rounded-xl p-5">
+                    <h4 class="font-bold text-[#4ECDC4] mb-3 flex items-center gap-2"><span class="bg-[#4ECDC4] text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">2</span> Tentukan Rantai</h4>
+                    <div class="bg-white rounded-lg p-4 mb-3">
+                      <p class="text-center text-gray-700">Semua karbon tersusun <strong class="text-[#4ECDC4]">LURUS</strong> tanpa cabang</p>
+                    </div>
+                    <p class="text-sm text-gray-600">✓ Rantai lurus → Gunakan awalan <strong>"n-"</strong> (normal)</p>
+                  </div>
+                  <!-- Langkah 3 -->
+                  <div class="bg-[#7FD8BE]/10 rounded-xl p-5">
+                    <h4 class="font-bold text-[#7FD8BE] mb-3 flex items-center gap-2"><span class="bg-[#7FD8BE] text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">3</span> Tulis Nama Sesuai Jumlah C</h4>
+                    <div class="bg-white rounded-lg p-4 mb-3">
+                      <p class="text-center text-gray-700 mb-3">5 karbon → awalan <strong class="text-[#7FD8BE]">"Pent"</strong></p>
+                      <p class="text-center text-gray-700">Akhiran alkana → <strong class="text-[#667eea]">"-ana"</strong></p>
+                      <p class="text-center text-2xl font-bold text-[#7FD8BE] mt-4">n-Pentana</p>
+                    </div>
+                  </div>
+                  <!-- Kesimpulan -->
+                  <div class="bg-gradient-to-r from-[#FFD93D]/20 to-[#FFA500]/20 rounded-xl p-5 border-2 border-[#FFD93D]">
+                    <p class="text-center text-gray-700"><span class="text-2xl mr-2">🎯</span> <strong class="text-lg text-[#7FD8BE]">Jawaban: n-Pentana (atau Pentana)</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Rantai Bercabang -->
+            <div class="bg-gradient-to-br from-teal-100 to-emerald-100 border-2 border-teal-200 rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-dashed border-[#4ECDC4]/30">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#4ECDC4] to-[#44A8FF] flex items-center justify-center text-2xl shadow-md text-white shrink-0">
+                  🔀
+                </div>
+                <div>
+                  <h3 class="text-xl md:text-2xl font-extrabold text-[#4ECDC4]">Alkana Rantai Bercabang</h3>
+                  <div class="h-1 w-24 bg-gradient-to-r from-[#4ECDC4] to-transparent rounded-full mt-1"></div>
+                </div>
+              </div>
+              
+              <!-- Langkah-Langkah Penamaan - ACCORDION -->
+              <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">💡 Langkah-Langkah Penamaan</h3>
+              <div class="space-y-3"><!-- Tip 1: Tanda Hubung -->
+               <div class="accordion-item bg-white rounded-xl overflow-hidden">
+                <div id="tipAccordionHeader1" class="accordion-header bg-[#667eea]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('tipAccordion1')">
+                 <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#667eea] flex items-center justify-center text-white font-bold shrink-0">
+                   ✓
+                  </div><span class="font-bold text-gray-800">Penggunaan Tanda Hubung dan Koma</span>
+                 </div>
+                 <svg id="tipArrow1" class="w-5 h-5 text-[#667eea] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                 </svg>
+                </div>
+                <div id="tipAccordion1" class="accordion-content bg-white hidden">
+                 <div class="p-5">
+                  <div class="bg-[#667eea]/5 rounded-lg p-4 mb-3">
+                   <p class="font-bold text-[#667eea] mb-2">✅ BENAR:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Gunakan <strong>tanda hubung (-)</strong> antara angka dan huruf: <code class="bg-white px-2 py-1 rounded">2-metilbutana</code></li>
+                    <li>• Gunakan <strong>koma (,)</strong> antar angka: <code class="bg-white px-2 py-1 rounded">2,3-dimetilpentana</code></li>
+                    <li>• Contoh lengkap: <code class="bg-white px-2 py-1 rounded">2,2,4-trimetilpentana</code></li>
+                   </ul>
+                  </div>
+                  <div class="bg-[#ff6363]/5 rounded-lg p-4">
+                   <p class="font-bold text-[#ff6363] mb-2">❌ SALAH:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Spasi berlebih: <code class="bg-white px-2 py-1 rounded line-through">2 metilbutana</code></li>
+                    <li>• Tanpa tanda hubung: <code class="bg-white px-2 py-1 rounded line-through">2metilbutana</code></li>
+                    <li>• Titik sebagai pemisah: <code class="bg-white px-2 py-1 rounded line-through">2.3-dimetilpentana</code></li>
+                   </ul>
+                  </div>
+                 </div>
+                </div>
+               </div><!-- Tip 2: Rantai Induk -->
+               <div class="accordion-item bg-white rounded-xl overflow-hidden">
+                <div id="tipAccordionHeader2" class="accordion-header bg-[#667eea]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('tipAccordion2')">
+                 <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#667eea] flex items-center justify-center text-white font-bold shrink-0">
+                   ✓
+                  </div><span class="font-bold text-gray-800">Menentukan Rantai Induk</span>
+                 </div>
+                 <svg id="tipArrow2" class="w-5 h-5 text-[#667eea] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                 </svg>
+                </div>
+                <div id="tipAccordion2" class="accordion-content bg-white hidden">
+                 <div class="p-5">
+                  <div class="bg-[#667eea]/5 rounded-lg p-4 mb-3">
+                   <p class="font-bold text-[#667eea] mb-2">✅ BENAR:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Pilih rantai karbon <strong>TERPANJANG</strong> sebagai rantai induk</li>
+                    <li>• Rantai induk <strong>tidak harus lurus</strong>, bisa berkelok-kelok</li>
+                    <li>• Hitung dari berbagai arah untuk menemukan yang terpanjang</li>
+                    <li>• Jika ada 2 rantai sama panjang, pilih yang memiliki <strong>lebih banyak cabang</strong></li>
+                   </ul>
+                  </div>
+                  <div class="bg-[#ff6363]/5 rounded-lg p-4">
+                   <p class="font-bold text-[#ff6363] mb-2">❌ SALAH:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Memilih rantai yang lebih pendek karena terlihat lurus</li>
+                    <li>• Tidak memeriksa semua kemungkinan rantai panjang</li>
+                    <li>• Mengabaikan rantai yang berkelok-kelok</li>
+                   </ul>
+                  </div>
+                 </div>
+                </div>
+               </div><!-- Tip 3: Penomoran -->
+               <div class="accordion-item bg-white rounded-xl overflow-hidden">
+                <div id="tipAccordionHeader3" class="accordion-header bg-[#667eea]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('tipAccordion3')">
+                 <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#667eea] flex items-center justify-center text-white font-bold shrink-0">
+                   ✓
+                  </div><span class="font-bold text-gray-800">Sistem Penomoran yang Benar</span>
+                 </div>
+                 <svg id="tipArrow3" class="w-5 h-5 text-[#667eea] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                 </svg>
+                </div>
+                <div id="tipAccordion3" class="accordion-content bg-white hidden">
+                 <div class="p-5">
+                  <div class="bg-[#667eea]/5 rounded-lg p-4 mb-3">
+                   <p class="font-bold text-[#667eea] mb-2">✅ BENAR:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Mulai penomoran dari ujung yang membuat <strong>nomor cabang terkecil</strong></li>
+                    <li>• Bandingkan total nomor dari kedua arah: pilih yang <strong>jumlahnya lebih kecil</strong></li>
+                    <li>• Contoh: <code class="bg-white px-2 py-1 rounded">2,3</code> lebih baik dari <code class="bg-white px-2 py-1 rounded">4,5</code></li>
+                    <li>• <strong>Prioritas Abjad:</strong> Jika posisi setara, dahulukan cabang dengan abjad lebih awal.<br><span class="text-xs text-gray-500 ml-3">(Contoh: <strong>Etil</strong> harus dapat nomor lebih kecil dari Metil).</span></li>
+                    <li>• <strong>Posisi Identik:</strong> Jika jenis & posisi cabang sama dari kedua ujung, penomoran <strong>bebas</strong> (boleh dari kiri/kanan).</li>
+                   </ul>
+                  </div>
+                  <div class="bg-[#ff6363]/5 rounded-lg p-4">
+                   <p class="font-bold text-[#ff6363] mb-2">❌ SALAH:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Menggunakan nomor besar tanpa alasan yang jelas</li>
+                    <li>• Tidak membandingkan penomoran dari kedua arah</li>
+                    <li>• Penomoran: <code class="bg-white px-2 py-1 rounded line-through">4,5-dimetilheptana</code> (seharusnya 3,4-)</li>
+                   </ul>
+                  </div>
+                 </div>
+                </div>
+               </div><!-- Tip 4: Urutan Alfabetis -->
+               <div class="accordion-item bg-white rounded-xl overflow-hidden">
+                <div id="tipAccordionHeader4" class="accordion-header bg-[#667eea]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('tipAccordion4')">
+                 <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#667eea] flex items-center justify-center text-white font-bold shrink-0">
+                   ✓
+                  </div><span class="font-bold text-gray-800">Urutan Alfabetis Cabang</span>
+                 </div>
+                 <svg id="tipArrow4" class="w-5 h-5 text-[#667eea] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                 </svg>
+                </div>
+                <div id="tipAccordion4" class="accordion-content bg-white hidden">
+                 <div class="p-5">
+                  <div class="bg-[#667eea]/5 rounded-lg p-4 mb-3">
+                   <p class="font-bold text-[#667eea] mb-2">✅ BENAR:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Urutkan cabang berbeda secara <strong>alfabetis</strong></li>
+                    <li>• <strong>Abaikan</strong> awalan di-, tri-, tetra-, dll saat mengurutkan</li>
+                    <li>• Contoh: <code class="bg-white px-2 py-1 rounded">3-etil-2-metilheksana</code> (e sebelum m)</li>
+                    <li>• <code class="bg-white px-2 py-1 rounded">4-etil-2,2-dimetilheptana</code> (etil dulu, baru dimetil)</li>
+                   </ul>
+                  </div>
+                  <div class="bg-[#ff6363]/5 rounded-lg p-4">
+                   <p class="font-bold text-[#ff6363] mb-2">❌ SALAH:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Urutan tidak alfabetis: <code class="bg-white px-2 py-1 rounded line-through">2-metil-3-etilheksana</code></li>
+                    <li>• Mengurutkan berdasarkan nomor posisi (bukan huruf)</li>
+                    <li>• Memperhitungkan awalan di-, tri- saat mengurutkan</li>
+                   </ul>
+                  </div>
+
+                  <!-- Aturan Khusus Awalan Alkil -->
+                  <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                    <p class="font-bold text-yellow-800 mb-2">
+                      <span class="bg-yellow-300 px-2 py-0.5 rounded shadow-sm inline-block transform -rotate-1 border border-yellow-400">⚠️ Jangan sampai terkecoh!</span>
+                    </p>
+                    <p class="text-sm text-gray-700 mb-3">Saat mengurutkan cabang, ada aturan khusus untuk awalan alkil:</p>
+                    <ul class="text-sm text-gray-700 space-y-3 mb-4">
+                      <li class="flex items-start gap-2">
+                        <span class="text-green-600 font-bold shrink-0">✅ Dihitung (Ikut Alfabet):</span>
+                        <span>Awalan <strong>Iso-</strong> (contoh: Isopropil). Huruf yang dilihat adalah <strong>I</strong>.</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <span class="text-red-500 font-bold shrink-0">❌ Diabaikan (Tidak Ikut Alfabet):</span>
+                        <span>Awalan <strong>Sek-</strong> dan <strong>Ters-</strong> (contoh: sec-Butil, tert-Butil). Huruf yang dilihat tetap <strong>B</strong>.</span>
+                      </li>
+                    </ul>
+                    
+                    <div class="bg-white/60 p-3 rounded-lg border border-yellow-200">
+                      <p class="font-bold text-gray-800 text-sm mb-2">💡 Contoh Penerapan:</p>
+                      <p class="text-sm text-gray-700 mb-2">Jika kamu punya cabang <strong>Etil</strong> dan <strong>Ters-butil</strong>, manakah yang ditulis duluan?</p>
+                      <div class="bg-yellow-100/50 p-2 rounded mb-2">
+                        <p class="text-sm text-gray-700"><strong>Analisis:</strong> Etil (huruf E) vs Ters-butil (huruf B).</p>
+                        <p class="text-sm text-gray-700"><strong>Hasilnya:</strong> Ters-butil ditulis lebih dulu!</p>
+                      </div>
+                      <div class="bg-green-100 px-3 py-2 rounded text-green-800 font-mono text-sm font-bold border border-green-200">
+                        ✅ Benar: 4-tert-butil-5-etiloktana
+                      </div>
+                    </div>
+                  </div>
+
+                 </div>
+                </div>
+               </div><!-- Tip 5: Awalan di-, tri-, tetra- -->
+               <div class="accordion-item bg-white rounded-xl overflow-hidden">
+                <div id="tipAccordionHeader5" class="accordion-header bg-[#667eea]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('tipAccordion5')">
+                 <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#667eea] flex items-center justify-center text-white font-bold shrink-0">
+                   ✓
+                  </div><span class="font-bold text-gray-800">Penggunaan Awalan Jumlah</span>
+                 </div>
+                 <svg id="tipArrow5" class="w-5 h-5 text-[#667eea] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                 </svg>
+                </div>
+                <div id="tipAccordion5" class="accordion-content bg-white hidden">
+                 <div class="p-5">
+                  <div class="bg-[#667eea]/5 rounded-lg p-4 mb-3">
+                   <p class="font-bold text-[#667eea] mb-2">✅ BENAR:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Gunakan awalan <strong>di-</strong> untuk 2 cabang sama: <code class="bg-white px-2 py-1 rounded">2,3-dimetil</code></li>
+                    <li>• Gunakan awalan <strong>tri-</strong> untuk 3 cabang sama: <code class="bg-white px-2 py-1 rounded">2,2,4-trimetil</code></li>
+                    <li>• Gunakan awalan <strong>tetra-</strong> untuk 4 cabang sama</li>
+                    <li>• Sebutkan <strong>semua nomor posisi</strong> dengan koma: 2,2,4- bukan 2,4-</li>
+                   </ul>
+                  </div>
+                  <div class="bg-[#ff6363]/5 rounded-lg p-4">
+                   <p class="font-bold text-[#ff6363] mb-2">❌ SALAH:</p>
+                   <ul class="text-sm text-gray-700 space-y-2">
+                    <li>• Lupa menambahkan awalan: <code class="bg-white px-2 py-1 rounded line-through">2,3-metilpentana</code></li>
+                    <li>• Awalan salah: <code class="bg-white px-2 py-1 rounded line-through">2,2,4-dimetilpentana</code> (harusnya tri-)</li>
+                    <li>• Nomor tidak lengkap: <code class="bg-white px-2 py-1 rounded line-through">2,4-trimetilpentana</code> (kurang satu nomor 2)</li>
+                   </ul>
+                  </div>
+                 </div>
+                </div>
+               </div>
+              </div><!-- Summary Box -->
+              <div class="bg-gradient-to-r from-[#FFD93D]/20 to-[#FFA500]/20 rounded-2xl p-5 mt-6">
+               <p class="font-bold text-[#FFA500] mb-2"><span class="bg-yellow-300 px-2 py-1 rounded text-yellow-900 shadow-sm inline-block transform -rotate-1">📝 Ringkasan Cepat:</span></p>
+               <p class="text-sm text-gray-700 leading-relaxed mb-4">Ingat urutan: <strong>Cari rantai terpanjang</strong> → <strong>Beri nomor yang terkecil</strong> → <strong>Urutkan cabang alfabetis</strong> → <strong>Gunakan awalan di-/tri-/tetra-</strong> → <strong>Tulis dengan tanda hubung dan koma yang benar</strong>!</p>
+               <div class="bg-white/60 rounded-xl p-4 border-l-4 border-[#FFA500]">
+                <p class="font-bold text-gray-800 mb-2">💡 Format Penulisan:</p>
+                <div class="font-mono text-sm bg-white px-3 py-2 rounded-lg border border-gray-200 mb-2 text-[#667eea] font-bold text-center break-all md:break-normal">
+                 [posisi]-[nama cabang][nama rantai induk]
+                </div>
+                <p class="text-xs text-gray-600">Contoh: <strong>2-metilpentana</strong>, <strong>3-etil-2-metilheksana</strong></p>
+               </div>
+              </div>
+
+              <!-- SEPARATOR -->
+              <div class="my-8 border-t border-dashed border-gray-300"></div>
+
+              <!-- Contoh Soal Penamaan (Digabung ke sini) -->
+              <h3 class="text-xl font-bold text-[#667eea] mb-6 flex items-center gap-2">📚 Contoh Soal Penamaan</h3>
+              
+              <!-- Accordion Item 1 -->
+              <div class="mb-4"><button onclick="toggleAccordion(1)" class="w-full bg-gradient-to-r from-[#667eea]/20 to-[#764ba2]/20 hover:from-[#667eea]/30 hover:to-[#764ba2]/30 rounded-xl p-4 flex items-center justify-between transition-all duration-300">
+                  <div class="flex items-center gap-3"><span class="bg-[#667eea] text-white px-3 py-1 rounded-lg font-bold">Contoh 1</span>
+                  </div>
+                  <svg id="accordionIcon1" class="w-6 h-6 text-[#667eea] transition-transform duration-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="accordionContent1" class="hidden mt-4 space-y-4">
+                  <!-- ACCORDION: 2-metilpentana INTERAKTIF -->
+                  <div class="bg-gradient-to-br from-[#FFD93D]/20 to-[#FFA500]/20 rounded-2xl p-4 md:p-6 border-2 border-[#FFD93D]">
+                    <div class="flex flex-col md:flex-row items-center justify-between mb-4 gap-2">
+                      <h4 class="font-bold text-[#FFA500] text-lg md:text-xl text-center md:text-left">📚 CONTOH: 2-metilpentana</h4><button onclick="resetBranchedExample()" class="interactive-btn bg-white px-4 py-2 rounded-lg text-sm font-medium text-[#FFA500] hover:bg-[#FFA500] hover:text-white transition-all w-full md:w-auto"> 🔄 Reset </button>
+                    </div><!-- Struktur Molekul dengan Gambar -->
+                    <div class="bg-white rounded-xl p-6 mb-4">
+                      <p class="text-sm text-gray-500 mb-3 text-center">Struktur Molekul:</p>
+                      <div class="flex justify-center mb-4"><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-10%20154516.png?raw=true" alt="Struktur 2-metilpentana" class="max-w-full h-auto" style="max-height: 120px;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'font-mono text-center text-gray-800 leading-relaxed\'><p>      CH₃</p><p>      |</p><p>CH₃ - CH - CH₂ - CH₂ - CH₃</p></div>';">
+                      </div>
+                      <p class="text-xs text-gray-500 text-center mb-4">Perhatikan cabang metil (-CH₃)</p>
+                    </div><!-- Accordion Items for Branched -->
+                    <div class="space-y-3"><!-- Step 1 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden">
+                        <div id="branchedAccordionHeader1" class="accordion-header bg-[#FFD93D]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('branchedAccordion1')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[#FFD93D] flex items-center justify-center text-gray-800 font-bold shrink-0">
+                              1
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Tentukan Rantai Induk</span>
+                          </div>
+                          <svg id="branchedArrow1" class="w-5 h-5 text-[#FFD93D] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="branchedAccordion1" class="accordion-content bg-white">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Pilih rantai karbon terpanjang (tidak termasuk cabang):</p><button onclick="selectMainChain()" class="interactive-btn bg-[#FFD93D] text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-[#FFA500] hover:text-white w-full md:w-auto"> 🔍 Pilih Rantai Induk </button>
+                            <p id="mainChainResult" class="text-sm text-[#FFA500] font-bold mt-3 hidden"></p>
+                          </div>
+                        </div>
+                      </div><!-- Step 2 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden opacity-50 pointer-events-none" id="branchedStep2Container">
+                        <div id="branchedAccordionHeader2" class="accordion-header bg-gray-100 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('branchedAccordion2')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold shrink-0">
+                              2
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Beri Penomoran</span>
+                          </div>
+                          <svg id="branchedArrow2" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="branchedAccordion2" class="accordion-content bg-white hidden">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Pilih arah penomoran dari kiri atau kanan (yang membuat nomor cabang terkecil):</p>
+                            <div class="flex flex-col sm:flex-row gap-2"><button onclick="numberFromLeft()" class="interactive-btn bg-gray-100 px-4 py-2 rounded-lg text-sm hover:bg-[#4ECDC4] hover:text-white flex-1">← Dari Kiri (1→5)</button> <button onclick="numberFromRight()" class="interactive-btn bg-gray-100 px-4 py-2 rounded-lg text-sm hover:bg-[#4ECDC4] hover:text-white flex-1">Dari Kanan (5→1) →</button>
+                            </div>
+                            <div id="numberingResult" class="text-sm text-[#FFA500] font-bold mt-3 hidden"></div>
+                          </div>
+                        </div>
+                      </div><!-- Step 3 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden opacity-50 pointer-events-none" id="branchedStep3Container">
+                        <div id="branchedAccordionHeader3" class="accordion-header bg-gray-100 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('branchedAccordion3')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold shrink-0">
+                              3
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Identifikasi Cabang</span>
+                          </div>
+                          <svg id="branchedArrow3" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="branchedAccordion3" class="accordion-content bg-white hidden">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Klik untuk mengidentifikasi jenis dan posisi cabang:</p><button onclick="identifyBranch()" class="interactive-btn bg-[#FFD93D] text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-[#FFA500] hover:text-white w-full md:w-auto"> 🔬 Identifikasi Cabang </button>
+                            <p id="branchIdentifyResult" class="text-sm text-[#FFA500] font-bold mt-3 hidden"></p>
+                          </div>
+                        </div>
+                      </div><!-- Step 4 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden opacity-50 pointer-events-none" id="branchedStep4Container">
+                        <div id="branchedAccordionHeader4" class="accordion-header bg-gray-100 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('branchedAccordion4')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold shrink-0">
+                              4
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Tulis Nama Lengkap</span>
+                          </div>
+                          <svg id="branchedArrow4" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="branchedAccordion4" class="accordion-content bg-white hidden">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Gabungkan posisi cabang + nama cabang + nama rantai induk:</p><button onclick="showFinalNameBranched()" class="interactive-btn bg-gradient-to-r from-[#FFD93D] to-[#FFA500] text-white px-8 py-3 rounded-lg font-bold hover:shadow-lg w-full md:w-auto"> ✨ Lihat Nama Lengkap </button>
+                            <div id="finalNameBranchedResult" class="bg-gradient-to-r from-[#4ECDC4]/30 to-[#44A8FF]/30 rounded-xl p-4 mt-4 hidden">
+                              <p class="text-center text-2xl font-bold text-gray-800"></p>
+                              <p class="text-center text-sm text-gray-600 mt-2">Format: [posisi]-[nama cabang][nama rantai induk]</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Accordion Item 2 -->
+              <div class="mb-4"><button onclick="toggleAccordion(2)" class="w-full bg-gradient-to-r from-[#764ba2]/20 to-[#4ECDC4]/20 hover:from-[#764ba2]/30 hover:to-[#4ECDC4]/30 rounded-xl p-4 flex items-center justify-between transition-all duration-300">
+                  <div class="flex items-center gap-3"><span class="bg-[#764ba2] text-white px-3 py-1 rounded-lg font-bold">Contoh 2</span>
+                  </div>
+                  <svg id="accordionIcon2" class="w-6 h-6 text-[#764ba2] transition-transform duration-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="accordionContent2" class="hidden mt-4 space-y-4">
+                  <!-- ACCORDION: 3,4-dimetilheksana INTERAKTIF -->
+                  <div class="bg-gradient-to-br from-[#764ba2]/20 to-[#4ECDC4]/20 rounded-2xl p-4 md:p-6 border-2 border-[#764ba2]">
+                    <div class="flex flex-col md:flex-row items-center justify-between mb-4 gap-2">
+                      <h4 class="font-bold text-[#764ba2] text-lg md:text-xl text-center md:text-left">📚 CONTOH: 3,4-dimetilheksana</h4><button onclick="resetComplexBranchedExample()" class="interactive-btn bg-white px-4 py-2 rounded-lg text-sm font-medium text-[#764ba2] hover:bg-[#764ba2] hover:text-white transition-all w-full md:w-auto"> 🔄 Reset </button>
+                    </div><!-- Struktur Molekul dengan Gambar -->
+                    <div class="bg-white rounded-xl p-6 mb-4">
+                      <p class="text-sm text-gray-500 mb-3 text-center">Struktur Molekul:</p>
+                      <div class="flex justify-center mb-4"><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/de37ff8b6af9c0576fcf1bdfd64d23d5bc6bc887/Screenshot%202026-01-10%20154705.png?raw=true" alt="Struktur 3,4-dimetilheksana" class="max-w-full h-auto" style="max-height: 150px;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'font-mono text-center text-gray-800 leading-relaxed\'><p>        CH₃  CH₃</p><p>         |    |</p><p>CH₃-CH₂-CH-CH-CH₂-CH₃</p></div>';">
+                      </div>
+                      <p class="text-xs text-gray-500 text-center mb-4">Perhatikan ada dua cabang metil (-CH₃)</p>
+                    </div><!-- Accordion Items for Complex Branched -->
+                    <div class="space-y-3"><!-- Step 1 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden">
+                        <div id="complexBranchedAccordionHeader1" class="accordion-header bg-[#764ba2]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('complexBranchedAccordion1')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-[#764ba2] flex items-center justify-center text-white font-bold shrink-0">
+                              1
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Tentukan Rantai Induk</span>
+                          </div>
+                          <svg id="complexBranchedArrow1" class="w-5 h-5 text-[#764ba2] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="complexBranchedAccordion1" class="accordion-content bg-white">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Pilih rantai karbon terpanjang:</p><button onclick="selectComplexMainChain()" class="interactive-btn bg-[#764ba2] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#5a3780] hover:shadow-lg w-full md:w-auto"> 🔍 Pilih Rantai Induk </button>
+                            <p id="complexMainChainResult" class="text-sm text-[#764ba2] font-bold mt-3 hidden"></p>
+                          </div>
+                        </div>
+                      </div><!-- Step 2 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden opacity-50 pointer-events-none" id="complexBranchedStep2Container">
+                        <div id="complexBranchedAccordionHeader2" class="accordion-header bg-gray-100 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('complexBranchedAccordion2')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold shrink-0">
+                              2
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Beri Penomoran</span>
+                          </div>
+                          <svg id="complexBranchedArrow2" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="complexBranchedAccordion2" class="accordion-content bg-white hidden">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Pilih arah penomoran agar cabang mendapat nomor terkecil:</p>
+                            <div class="flex flex-col sm:flex-row gap-2"><button onclick="numberComplexFromLeft()" class="interactive-btn bg-gray-100 px-4 py-2 rounded-lg text-sm hover:bg-[#4ECDC4] hover:text-white flex-1">← Dari Kiri</button> <button onclick="numberComplexFromRight()" class="interactive-btn bg-gray-100 px-4 py-2 rounded-lg text-sm hover:bg-[#4ECDC4] hover:text-white flex-1">Dari Kanan →</button>
+                            </div>
+                            <div id="complexNumberingResult" class="text-sm text-[#764ba2] font-bold mt-3 hidden"></div>
+                          </div>
+                        </div>
+                      </div><!-- Step 3 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden opacity-50 pointer-events-none" id="complexBranchedStep3Container">
+                        <div id="complexBranchedAccordionHeader3" class="accordion-header bg-gray-100 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('complexBranchedAccordion3')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold shrink-0">
+                              3
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Identifikasi Cabang</span>
+                          </div>
+                          <svg id="complexBranchedArrow3" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="complexBranchedAccordion3" class="accordion-content bg-white hidden">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Klik untuk mengidentifikasi cabang:</p><button onclick="identifyComplexBranch()" class="interactive-btn bg-[#764ba2] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#5a3780] hover:shadow-lg w-full md:w-auto"> 🔬 Identifikasi Cabang </button>
+                            <p id="complexBranchIdentifyResult" class="text-sm text-[#764ba2] font-bold mt-3 hidden"></p>
+                          </div>
+                        </div>
+                      </div><!-- Step 4 -->
+                      <div class="accordion-item bg-white rounded-xl overflow-hidden opacity-50 pointer-events-none" id="complexBranchedStep4Container">
+                        <div id="complexBranchedAccordionHeader4" class="accordion-header bg-gray-100 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('complexBranchedAccordion4')">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold shrink-0">
+                              4
+                            </div><span class="font-bold text-gray-800 text-sm md:text-base">Tulis Nama Lengkap</span>
+                          </div>
+                          <svg id="complexBranchedArrow4" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div id="complexBranchedAccordion4" class="accordion-content bg-white hidden">
+                          <div class="p-5">
+                            <p class="text-sm text-gray-600 mb-3">Gabungkan nomor, awalan jumlah, nama cabang, dan rantai induk:</p><button onclick="showFinalNameComplexBranched()" class="interactive-btn bg-gradient-to-r from-[#764ba2] to-[#4ECDC4] text-white px-8 py-3 rounded-lg font-bold hover:shadow-lg w-full md:w-auto"> ✨ Lihat Nama Lengkap </button>
+                            <div id="finalNameComplexBranchedResult" class="bg-gradient-to-r from-[#764ba2]/20 to-[#4ECDC4]/20 rounded-xl p-4 mt-4 hidden">
+                              <p class="text-center text-2xl font-bold text-gray-800"></p>
+                              <p class="text-center text-sm text-gray-600 mt-2">Format: 3,4-dimetilheksana</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Sikloalkana -->
+            <div class="bg-gradient-to-br from-orange-50 via-rose-50 to-white border-2 border-orange-100 rounded-3xl p-6 md:p-8 shadow-xl hover-card mb-6">
+              <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-dashed border-[#FFA500]/30">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#FFA500] to-[#FF6B6B] flex items-center justify-center text-2xl shadow-md text-white shrink-0">
+                  ⭕
+                </div>
+                <div>
+                  <h3 class="text-2xl font-extrabold text-[#FFA500]">Sikloalkana</h3>
+                  <div class="h-1 w-24 bg-gradient-to-r from-[#FFA500] to-transparent rounded-full mt-1"></div>
+                </div>
+              </div>
+              <p class="text-gray-600 mb-2">Alkana dengan rantai karbon melingkar membentuk cincin. Rumus: <strong>C<sub>n</sub>H<sub>2n</sub></strong></p>
+              <p class="text-gray-600 mb-6">Penamaan: Awalan <strong>"siklo-"</strong> + nama alkana</p>
+              <!-- Sikloalkana Tanpa Cabang -->
+              <div class="mb-6">
+                <h4 class="font-bold text-[#4ECDC4] mb-4">📍 Sikloalkana Tanpa Cabang</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                  <!-- Siklopropana -->
+                  <div class="bg-[#4ECDC4]/10 rounded-xl p-4 text-center hover:bg-[#4ECDC4]/20 transition-all">
+                    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center">
+                      <svg viewbox="0 0 50 50" class="w-10 h-10"><polygon points="25,5 45,40 5,40" fill="none" stroke="#4ECDC4" stroke-width="3" />
+                      </svg>
+                    </div>
+                    <img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-11%20204407.png?raw=true" alt="Struktur Molekul Siklopropana" class="w-auto h-16 mx-auto object-contain mb-2 mix-blend-multiply">
+                    <p class="font-bold text-[#4ECDC4]">Siklopropana</p>
+                    <p class="text-xs text-gray-500">C₃H₆</p>
+                  </div>
+                  <!-- Siklobutana -->
+                  <div class="bg-[#667eea]/10 rounded-xl p-4 text-center hover:bg-[#667eea]/20 transition-all">
+                    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center">
+                      <svg viewbox="0 0 50 50" class="w-10 h-10"><rect x="10" y="10" width="30" height="30" fill="none" stroke="#667eea" stroke-width="3" />
+                      </svg>
+                    </div>
+                    <img src="https://imgix2.ruangguru.com/assets/miscellaneous/png_vmqi9y_3101.png" alt="Struktur Molekul Siklobutana" class="w-auto h-16 mx-auto object-contain mb-2 mix-blend-multiply">
+                    <p class="font-bold text-[#667eea]">Siklobutana</p>
+                    <p class="text-xs text-gray-500">C₄H₈</p>
+                  </div>
+                  <!-- Siklopentana -->
+                  <div class="bg-[#764ba2]/10 rounded-xl p-4 text-center hover:bg-[#764ba2]/20 transition-all">
+                    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center">
+                      <svg viewbox="0 0 50 50" class="w-10 h-10"><polygon points="25,5 47,20 40,45 10,45 3,20" fill="none" stroke="#764ba2" stroke-width="3" />
+                      </svg>
+                    </div>
+                    <img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-11%20204351.png?raw=true" alt="Struktur Molekul Siklopentana" class="w-auto h-16 mx-auto object-contain mb-2 mix-blend-multiply">
+                    <p class="font-bold text-[#764ba2]">Siklopentana</p>
+                    <p class="text-xs text-gray-500">C₅H₁₀</p>
+                  </div>
+                </div>
+                <div class="bg-blue-50 rounded-xl p-4">
+                  <p class="text-sm text-gray-600"><strong>Aturan:</strong> Langsung tulis "siklo-" + nama alkana sesuai jumlah C dalam cincin.</p>
+                </div>
+              </div>
+              <!-- Sikloalkana Bercabang -->
+              <div>
+                <h4 class="font-bold text-[#FFA500] mb-4">🔀 Sikloalkana Bercabang</h4>
+                <p class="text-sm text-gray-600 mb-4">Jika ada cabang pada cincin sikloalkana, ikuti aturan berikut:</p>
+                <div class="space-y-4 mb-6">
+                  <div class="bg-[#667eea]/10 rounded-xl p-4">
+                    <p class="font-bold text-[#667eea] mb-2">1️⃣ Satu Cabang</p>
+                    <p class="text-sm text-gray-600 mb-3">Jika hanya ada satu cabang, TIDAK PERLU menuliskan nomornya. Langsung sebut nama cabang + nama cincin.</p>
+                    <div class="bg-white rounded-lg p-3 text-center mb-4">
+                      <img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-11%20213507.png?raw=true" alt="Contoh Satu Cabang" class="w-auto h-16 mx-auto object-contain mb-2">
+                      <p class="font-mono text-sm mb-1">Cincin siklopentana + cabang metil</p>
+                      <p class="font-bold text-[#667eea]">= metilsiklopentana</p>
+                    </div>
+                    
+                    <!-- PENGECUALIAN -->
+                    <div class="bg-yellow-50 border-l-4 border-[#FFA500] p-3 rounded-r-lg shadow-sm">
+                      <p class="font-bold text-xs mb-1 flex items-center gap-1"><span class="bg-yellow-300 text-yellow-900 px-1 inline-block transform -rotate-1 shadow-sm border border-yellow-400">⚠️ PENGECUALIAN</span></p>
+                      <p class="text-xs text-gray-700 mb-2 leading-relaxed">
+                        Jika rantai cabang (alkil) memiliki <strong>jumlah atom C lebih banyak</strong> daripada cincinnya, maka cincin berubah menjadi cabang/substituen.
+                      </p>
+                      <div class="bg-white rounded-lg p-2 text-center border border-yellow-100">
+                        <img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-11%20215552.png?raw=true" alt="Struktur 1-siklobutilpentana" class="w-auto h-16 mx-auto object-contain mb-2">
+                        <p class="font-bold text-gray-800 text-sm">1-siklobutilpentana</p>
+                        <p class="text-[10px] text-gray-500 mt-1">
+                          (Pentana 5 atom C > Siklobutana 4 atom C)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bg-[#764ba2]/10 rounded-xl p-4">
+                    <p class="font-bold text-[#764ba2] mb-2">2️⃣ Dua atau Lebih Cabang</p>
+                    <p class="text-sm text-gray-600 mb-3">Beri nomor mulai dari cabang yang memberikan jumlah posisi terkecil</p>
+                    <div class="bg-white rounded-lg p-3 text-center">
+                      <img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-11%20213517.png?raw=true" alt="Contoh Dua Cabang" class="w-auto h-24 mx-auto object-contain mb-2">
+                      <p class="font-mono text-sm mb-1">Siklopentana dengan 2 metil di posisi 1 dan 3</p>
+                      <p class="font-bold text-[#764ba2]">= 1,3-dimetilsiklopentana</p>
+                    </div>
+                  </div>
+                  <div class="bg-[#4ECDC4]/10 rounded-xl p-4">
+                    <p class="font-bold text-[#4ECDC4] mb-2">3️⃣ Cabang Berbeda</p>
+                    <p class="text-sm text-gray-600 mb-3">Urutkan cabang secara <strong>alfabetis</strong> (abaikan awalan di-, tri-)</p>
+                    <div class="bg-white rounded-lg p-3 text-center">
+                      <img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-11%20213537.png?raw=true" alt="Contoh Cabang Berbeda" class="w-auto h-24 mx-auto object-contain mb-2">
+                      <p class="font-mono text-sm mb-1">Siklobutana: etil di posisi 1, metil di posisi 2</p>
+                      <p class="font-bold text-[#4ECDC4]">= 1-etil-2-metilsiklobutana</p>
+                      <p class="text-xs text-gray-500 mt-2">(etil dulu karena E sebelum M dalam alfabet)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Section -->
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card border border-indigo-100">
+                <div class="text-center mb-6">
+                    <h3 class="text-xl font-bold text-[#667eea] mb-2 flex items-center justify-center gap-2"><span class="text-2xl">🎬</span> Belum terlalu paham cara penamaan alkana?</h3>
+                    <p class="text-gray-600">It's ok, yuk sekarang liat video penjelasan lengkapnya di sini! 👇</p>
+                </div>
+                <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-lg border-4 border-white bg-black">
+                    <iframe 
+                        class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/8nsh2_nyv0M" 
+                        title="Tata Nama Alkana"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+          </div>
+
+          <!-- TAB 2: SIFAT ALKANA -->
+          <div id="tab2" class="tab-content">
+            <!-- Sifat Fisik -->
+            <div class="bg-gradient-to-br from-cyan-50 via-blue-50 to-white border border-blue-100 rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-dashed border-[#0284c7]/30">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#4ECDC4] to-[#0284c7] flex items-center justify-center text-2xl shadow-md text-white shrink-0">
+                  🌡️
+                </div>
+                <div>
+                  <h3 class="text-2xl font-extrabold text-[#0284c7]">Sifat Fisik Alkana</h3>
+                  <div class="h-1 w-24 bg-gradient-to-r from-[#0284c7] to-transparent rounded-full mt-1"></div>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <!-- Wujud -->
+                <div class="bg-gradient-to-r from-[#4ECDC4]/10 to-[#44A8FF]/10 rounded-xl p-5">
+                  <h4 class="font-bold text-[#4ECDC4] mb-3 flex items-center gap-2"><span class="text-2xl">💨</span> Wujud Zat</h4>
+                  <ul class="space-y-2 text-gray-700 ml-0 md:ml-6">
+                    <li class="flex items-start gap-2"><span class="text-[#4ECDC4] font-bold">•</span> <span><strong>C₁ - C₄:</strong> Gas pada suhu kamar (metana, etana, propana, butana)</span></li>
+                    <li class="flex items-start gap-2"><span class="text-[#44A8FF] font-bold">•</span> <span><strong>C₅ - C₁₇:</strong> Cair pada suhu kamar (pentana hingga heptadekana)</span></li>
+                    <li class="flex items-start gap-2"><span class="text-[#764ba2] font-bold">•</span> <span><strong>C₁₈+:</strong> Padat pada suhu kamar (oktadekana ke atas, lilin parafin)</span></li>
+                  </ul>
+                </div>
+                <!-- Titik Didih -->
+                <div class="bg-gradient-to-r from-[#FFD93D]/10 to-[#FFA500]/10 rounded-xl p-5">
+                  <h4 class="font-bold text-[#FFA500] mb-3 flex items-center gap-2"><span class="text-2xl">📈</span> Titik Didih dan Leleh</h4>
+                  <div class="bg-white rounded-lg p-4 mb-3">
+                    <p class="text-gray-700 mb-2"><strong>Semakin panjang rantai karbon</strong> → <span class="text-[#ff6363] font-bold">Titik didih dan leleh NAIK</span></p>
+                    <p class="text-sm text-gray-600">Alasan: Gaya Van der Waals antar molekul semakin kuat seiring bertambahnya massa molekul.</p>
+                  </div>
+                  
+                  <!-- CATATAN BARU: Hubungan cabang dan titik didih -->
+                  <div class="bg-orange-50 border-l-4 border-[#FFA500] p-4 rounded-r-xl mb-3 shadow-sm">
+                    <p class="text-sm text-gray-700 font-medium">
+                      <strong>💡 Catatan Isomer:</strong> Untuk jumlah atom C yang sama (Isomer), rantai yang memiliki banyak cabang akan memiliki titik didih yang lebih rendah.
+                    </p>
+                  </div>
+
+                  <div class="bg-blue-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-600"><strong>Contoh:</strong> Metana (gas, -162°C) → Dekana (cair, 174°C) → Ikosana (padat, &gt;300°C)</p>
+                  </div>
+                </div>
+                <!-- Kelarutan -->
+                <div class="bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 rounded-xl p-5">
+                  <h4 class="font-bold text-[#667eea] mb-3 flex items-center gap-2"><span class="text-2xl">💧</span> Kelarutan</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-lg p-4">
+                      <p class="font-bold text-[#ff6363] mb-2">❌ Tidak Larut dalam Air</p>
+                      <p class="text-sm text-gray-600">Alkana bersifat <strong>nonpolar</strong>, sedangkan air <strong>polar</strong>. Prinsip: <em>"Like dissolves like"</em></p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4">
+                      <p class="font-bold text-[#7FD8BE] mb-2">✅ Larut dalam Pelarut Nonpolar</p>
+                      <p class="text-sm text-gray-600">Larut sempurna dalam pelarut nonpolar seperti <strong>benzena, eter, kloroform</strong></p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Massa Jenis -->
+                <div class="bg-gradient-to-r from-[#7FD8BE]/10 to-[#4ECDC4]/10 rounded-xl p-5">
+                  <h4 class="font-bold text-[#7FD8BE] mb-3 flex items-center gap-2"><span class="text-2xl">⚖️</span> Massa Jenis</h4>
+                  <p class="text-gray-700 mb-2">Massa jenis alkana <strong>lebih kecil dari air</strong> (&lt; 1 g/cm³)</p>
+                  <div class="bg-white rounded-lg p-3">
+                    <p class="text-sm text-gray-600"><strong>Efek:</strong> Alkana cair akan <span class="text-[#4ECDC4] font-bold">mengapung di atas air</span> (seperti minyak)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Sifat Kimia -->
+            <div class="bg-gradient-to-br from-rose-50 via-orange-50 to-white border border-rose-100 rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <div class="flex items-center gap-4 mb-6 pb-4 border-b-2 border-dashed border-[#e11d48]/30">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#FFA500] to-[#e11d48] flex items-center justify-center text-2xl shadow-md text-white shrink-0">
+                  🔥
+                </div>
+                <div>
+                  <h3 class="text-2xl font-extrabold text-[#e11d48]">Sifat Kimia Alkana</h3>
+                  <div class="h-1 w-24 bg-gradient-to-r from-[#e11d48] to-transparent rounded-full mt-1"></div>
+                </div>
+              </div>
+              
+              <!-- Kalimat Pengantar Sifat Kimia (Baru) -->
+              <p class="text-gray-700 leading-relaxed mb-6 text-justify">
+                Sifat kimia alkana ditentukan oleh ikatan tunggalnya yang stabil and jenuh. Hal ini membuat alkana cenderung sulit bereaksi (parafin), kecuali melalui beberapa reaksi berikut ini:
+              </p>
+
+              <!-- Reaksi Pembakaran -->
+              <div class="mb-6">
+                <h4 class="font-bold text-[#FFA500] text-lg mb-4 flex items-center gap-2"><span class="text-2xl">🔥</span> 1. Reaksi Pembakaran (Oksidasi)</h4>
+                <!-- Pembakaran Sempurna -->
+                <div class="bg-gradient-to-r from-[#7FD8BE]/20 to-[#4ECDC4]/20 rounded-xl p-5 mb-4">
+                  <h5 class="font-bold text-[#4ECDC4] mb-3">✅ Pembakaran Sempurna</h5>
+                  <p class="text-gray-700 mb-3">Terjadi saat <strong>oksigen (O₂) cukup</strong>. Menghasilkan <strong>CO₂</strong> dan <strong>H₂O</strong> + Energi (panas)</p>
+                  <div class="bg-white rounded-xl p-4 mb-3">
+                    <p class="text-sm text-gray-600 mb-2"><strong>Rumus Umum:</strong></p>
+                    <p class="text-center font-mono text-base md:text-lg text-gray-800 mb-3 break-all md:break-normal">C<sub>n</sub>H<sub>2n+2</sub> + O₂ → CO₂ + H₂O + Energi</p>
+                    <p class="text-sm text-gray-600 mb-3"><strong>Contoh: Metana (CH₄)</strong></p>
+                    <p class="text-center font-mono text-sm md:text-base text-gray-800 bg-blue-50 rounded-lg p-3">CH₄ + 2O₂ → CO₂ + 2H₂O + Panas</p>
+                  </div>
+                  <div class="bg-[#7FD8BE]/20 rounded-lg p-3">
+                    <p class="text-sm text-gray-700"><strong>💡 Manfaat:</strong> Ini adalah reaksi yang terjadi di kompor gas, mesin kendaraan, and pembangkit listrik!</p>
+                  </div>
+                </div>
+                <!-- Pembakaran Tidak Sempurna -->
+                <div class="bg-gradient-to-r from-[#ff6363]/20 to-[#FFA500]/20 rounded-xl p-5">
+                  <h5 class="font-bold text-[#ff6363] mb-3">⚠️ Pembakaran Tidak Sempurna</h5>
+                  <p class="text-gray-700 mb-3">Terjadi saat <strong>oksigen (O₂) kurang/terbatas</strong>. Menghasilkan <strong>CO</strong> (karbon monoksida) atau <strong>C</strong> (jelaga hitam)</p>
+                  <div class="bg-white rounded-xl p-4 mb-3">
+                    <p class="text-sm text-gray-600 mb-2"><strong>Contoh Reaksi:</strong></p>
+                    <p class="text-center font-mono text-sm text-gray-800 bg-[#ff6363]/10 rounded-lg p-3 mb-2">2CH₄ + 3O₂ → 2CO + 4H₂O</p>
+                    <p class="text-center text-xs text-gray-500">(Menghasilkan CO - gas beracun)</p>
+                    <p class="text-center font-mono text-sm text-gray-800 bg-[#ff6363]/10 rounded-lg p-3 mt-3 mb-2">CH₄ + O₂ → C + 2H₂O</p>
+                    <p class="text-center text-xs text-gray-500">(Menghasilkan jelaga hitam)</p>
+                  </div>
+                  <div class="bg-[#ff6363]/20 rounded-lg p-3">
+                    <p class="text-sm text-gray-700"><strong>⚠️ BAHAYA:</strong> Gas CO <strong>tidak berwarna, tidak berbau</strong>, tapi <strong>sangat beracun</strong>! Mengikat hemoglobin darah lebih kuat dari O₂, menyebabkan keracunan bahkan kematian!</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Reaksi Substitusi -->
+              <div>
+                <h4 class="font-bold text-[#667eea] text-lg mb-4 flex items-center gap-2"><span class="text-2xl">🔄</span> 2. Reaksi Substitusi (Halogenasi)</h4>
+                <div class="bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 rounded-xl p-5">
+                  <p class="text-gray-700 mb-4">Atom <strong>hidrogen (H)</strong> pada alkana digantikan oleh atom <strong>halogen</strong> (Cl, Br, F, I). Reaksi memerlukan <strong>cahaya UV</strong> atau <strong>panas</strong>.</p>
+                  <div class="bg-white rounded-xl p-4 mb-4">
+                    <p class="text-sm text-gray-600 mb-3"><strong>Contoh: Metana + Klorin</strong></p>
+                    <div class="space-y-2">
+                      <p class="font-mono text-sm text-gray-800 bg-blue-50 rounded-lg p-3 text-center">CH₄ + Cl₂ <span class="text-xs text-gray-500">(cahaya UV)</span> → CH₃Cl + HCl</p>
+                      <p class="text-center text-xs text-gray-600">Metana → Metil klorida</p>
+                      <p class="font-mono text-sm text-gray-800 bg-blue-50 rounded-lg p-3 text-center mt-3">CH₃Cl + Cl₂ → CH₂Cl₂ + HCl</p>
+                      <p class="text-center text-xs text-gray-600">Metil klorida → Metilen klorida</p>
+                      <p class="text-center text-sm text-gray-500 mt-2">(Reaksi berlanjut hingga semua H terganti)</p>
+                    </div>
+                  </div>
+                  <div class="bg-[#667eea]/20 rounded-lg p-3">
+                    <p class="text-sm text-gray-700"><strong>💡 Produk Penting:</strong> Metil klorida (CH₃Cl), Kloroform (CHCl₃), dll. digunakan sebagai <strong>pelarut industri</strong>.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Pop-up Button: Bahaya CO -->
+            <div class="card-gradient rounded-3xl p-6 shadow-xl hover-card"><button onclick="openPopup('coPopup')" class="w-full bg-gradient-to-r from-[#ff6363] to-[#FFA500] rounded-2xl p-6 text-left hover:shadow-lg transition-all duration-300 group">
+                <div class="flex items-center gap-4">
+                  <div class="text-5xl group-hover:scale-110 transition-transform">
+                    ⚠️
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold text-white">Misteri Kematian dalam Mobil Tertutup 💀</h3>
+                    <p class="text-white/80 text-sm mt-1">Kisah nyata pembakaran tidak sempurna - Klik untuk baca!</p>
+                  </div>
+                  <div class="ml-auto text-white text-2xl group-hover:translate-x-2 transition-transform">
+                    →
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 3: ISOMER ALKANA (LENGKAP) -->
+          <div id="tab3" class="tab-content">
+            <!-- Header -->
+            <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FFD93D] to-[#FFA500] flex items-center justify-center text-3xl shadow-lg shrink-0">
+                  🔀
+                </div>
+                <div>
+                  <h2 class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#667eea] via-[#764ba2] to-[#FF6B6B] bg-clip-text text-transparent inline-block">
+                    Di Balik Performa Bahan Bakar 🚀
+                  </h2>
+                  <div class="h-1.5 w-24 bg-gradient-to-r from-[#FFD93D] to-[#FFA500] rounded-full mt-1 mb-2"></div>
+                  
+                  <!-- Introduction / Context Added Here -->
+                  <div class="bg-blue-50 border-l-4 border-[#667eea] p-4 my-4 rounded-r-xl shadow-sm">
+                    <h4 class="text-lg font-bold text-[#667eea] mb-2">Pertalite atau Pertamax? ⛽</h4>
+                    <p class="text-gray-700 text-sm leading-relaxed mb-2 text-justify">
+                      Di SPBU, kita sering dihadapkan pada dua pilihan:
+                    </p>
+                    <ul class="list-disc ml-5 mb-3 text-gray-700 text-sm">
+                      <li><strong>Pertalite:</strong> Harga lebih ekonomis.</li>
+                      <li><strong>Pertamax:</strong> Harga lebih tinggi.</li>
+                    </ul>
+                    <p class="text-gray-700 text-sm leading-relaxed text-justify">
+                      Banyak yang menganggap perbedaannya hanya pada warna cairan. Padahal, ketidaksesuaian bahan bakar dengan mesin dapat menyebabkan kerusakan serius seperti <em>Knocking</em>. Hal ini dipengaruhi langsung oleh <strong>Isomerisasi Hidrokarbon</strong>.
+                    </p>
+                  </div>
+
+                 <p class="text-gray-700 leading-relaxed mb-4 mt-2"><strong>Isomer</strong> adalah senyawa-senyawa yang memiliki <span class="bg-[#FFD93D]/30 px-2 py-1 rounded-lg font-semibold">rumus molekul sama</span> tetapi <span class="bg-[#4ECDC4]/30 px-2 py-1 rounded-lg font-semibold">struktur berbeda</span>. Pada alkana, isomer mulai muncul dari C₄ (butana).</p>
+                 
+                 <!-- Penjelasan Isomer Rangka (Accordion Style) -->
+                 <div class="mt-4">
+                   <div class="accordion-item bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+                    <div id="isomerAccordionHeader" class="accordion-header bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('isomerAccordionContent')">
+                     <h4 class="font-bold text-[#667eea] flex items-center gap-2 text-sm md:text-base">🔬 Alkana HANYA Memiliki Isomer Rangka</h4>
+                     <svg id="isomerAccordionArrow" class="w-5 h-5 text-[#667eea] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                     </svg>
+                    </div>
+                    <div id="isomerAccordionContent" class="accordion-content hidden">
+                     <div class="p-5">
+                      <p class="text-gray-700 text-sm leading-relaxed mb-3">Dari berbagai jenis isomer yang ada (rangka, posisi, gugus fungsi, geometri, optis), <strong class="text-[#667eea]">alkana hanya dapat memiliki ISOMER RANGKA</strong>.</p>
+                      <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                       <div>
+                        <p class="font-bold text-[#4ECDC4] text-sm mb-2">✓ Mengapa Alkana Memiliki Isomer Rangka?</p>
+                        <p class="text-gray-600 text-sm">Karena atom karbon dapat disusun dalam berbagai pola rantai: lurus atau bercabang. Rumus molekul sama, tapi susunan rangka karbon berbeda.</p>
+                       </div>
+                       <div>
+                        <p class="font-bold text-[#ff6363] text-sm mb-2">✗ Mengapa Tidak Ada Isomer Posisi?</p>
+                        <p class="text-gray-600 text-sm">Alkana hanya punya ikatan tunggal C-C dan C-H. Tidak ada gugus fungsi atau ikatan rangkap yang bisa berpindah posisi.</p>
+                       </div>
+                       <div>
+                        <p class="font-bold text-[#ff6363] text-sm mb-2">✗ Mengapa Tidak Ada Isomer Gugus Fungsi?</p>
+                        <p class="text-gray-600 text-sm">Alkana tidak memiliki gugus fungsi khusus (seperti -OH, -CHO, -COOH). Hanya terdiri dari C dan H dengan ikatan tunggal.</p>
+                       </div>
+                       <div>
+                        <p class="font-bold text-[#ff6363] text-sm mb-2">✗ Mengapa Tidak Ada Isomer Geometri?</p>
+                        <p class="text-gray-600 text-sm">Isomer geometri (cis-trans) memerlukan ikatan rangkap C=C yang kaku. Alkana hanya punya ikatan tunggal yang dapat berotasi bebas.</p>
+                       </div>
+                       <div>
+                        <p class="font-bold text-[#ff6363] text-sm mb-2">✗ Mengapa Tidak Ada Isomer Optis?</p>
+                        <p class="text-gray-600 text-sm">Isomer optis memerlukan atom C kiral (terikat pada 4 gugus berbeda). Alkana rantai pendek tidak memilikinya, tetapi isomer ini mulai muncul pada alkana yang lebih kompleks dengan rantai bercabang yang asimetris.</p>
+                       </div>
+                      </div>
+                     </div>
+                    </div>
+                   </div>
+                 </div>
+
+                </div>
+               </div>
+
+               <!-- Desain Baru untuk Pengantar Latihan -->
+               <div class="bg-gradient-to-r from-indigo-50 to-blue-50 border-l-4 border-[#667eea] rounded-r-2xl p-6 mb-8 shadow-md relative overflow-hidden">
+                 <div class="absolute -right-6 -top-6 text-9xl opacity-5 text-[#667eea]">🧩</div>
+                 <div class="relative z-10 flex gap-4">
+                   <div class="text-3xl hidden sm:block">💡</div>
+                   <div>
+                     <p class="text-gray-800 font-bold text-lg mb-2">Menyederhanakan Konsep</p>
+                     <p class="text-gray-700 text-sm leading-relaxed text-justify mb-2">
+                       Molekul bensin (Oktana/C₈) memiliki variasi isomer yang <strong>cukup banyak (18 bentuk!)</strong> 🤯.
+                     </p>
+                     <p class="text-gray-700 text-sm leading-relaxed text-justify">
+                       Supaya tidak pusing dan lebih mudah melihat pola <span class="bg-white px-2 py-0.5 rounded border border-gray-200 font-mono text-sm text-[#667eea]">Lurus vs Bercabang</span>, mari kita latihan dulu dengan molekul yang lebih sederhana: <strong>Butana (C₄)</strong> dan <strong>Pentana (C₅)</strong>. 🚀
+                     </p>
+                   </div>
+                 </div>
+               </div>
+               
+               <!-- Contoh Isomer Butana -->
+               <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+                <h3 class="text-xl font-bold text-[#667eea] mb-6 flex items-center gap-2">🧪 Isomer Butana (C₄H₁₀)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div class="bg-[#667eea]/10 rounded-2xl p-6">
+                  <h4 class="font-bold text-[#667eea] mb-4 text-center">n-Butana</h4>
+                  <div class="bg-white rounded-xl p-4 text-center font-mono">
+                   CH₃ - CH₂ - CH₂ - CH₃
+                  </div>
+                  <p class="text-sm text-gray-600 mt-3 text-center">Rantai lurus (4 C berurutan)</p>
+                 </div>
+                 <div class="bg-[#764ba2]/10 rounded-2xl p-6 relative">
+                  <!-- INFO BUTTON with PULSE effect -->
+                  <button onclick="openPopup('isoNeoPopup')" class="glow-btn absolute top-3 right-3 w-8 h-8 rounded-full bg-white border-2 border-indigo-400 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-[0_0_10px_rgba(99,102,241,0.5)] group">
+                    <span class="text-xs font-black">i</span>
+                    <!-- Tooltip -->
+                    <span class="absolute bottom-full mb-2 hidden group-hover:block bg-indigo-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap shadow-lg">Info "Iso" & "Neo"</span>
+                  </button>
+                  
+                  <h4 class="font-bold text-[#764ba2] mb-4 text-center">Isobutana (2-metilpropana)</h4>
+                  <div class="bg-white rounded-xl p-4 text-center font-mono"><span class="block">CH₃</span> <span class="block">|</span> CH₃ - CH - CH₃
+                  </div>
+                  <p class="text-sm text-gray-600 mt-3 text-center">Rantai bercabang (3 C utama + 1 cabang)</p>
+                 </div>
+                </div>
+                <div class="mt-4 bg-[#FFD93D]/20 rounded-xl p-4">
+                 <p class="text-sm text-gray-700 text-center"><strong>Rumus molekul sama:</strong> C₄H₁₀ | <strong>Struktur rangka berbeda</strong> → Isomer Rangka ✓</p>
+                </div>
+               </div>
+
+               <!-- Contoh Isomer Pentana -->
+               <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+                <h3 class="text-xl font-bold text-[#4ECDC4] mb-6 flex items-center gap-2">🧪 Isomer Pentana (C₅H₁₂)</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                 <div class="bg-[#4ECDC4]/10 rounded-2xl p-5">
+                  <h4 class="font-bold text-[#4ECDC4] mb-3 text-center text-sm">n-Pentana</h4>
+                  <div class="bg-white rounded-xl p-3 text-center font-mono text-xs">
+                   CH₃-CH₂-CH₂-CH₂-CH₃
+                  </div>
+                  <p class="text-xs text-gray-500 mt-2 text-center">Rantai lurus (5 C)</p>
+                 </div>
+                 <div class="bg-[#FFD93D]/10 rounded-2xl p-5">
+                  <h4 class="font-bold text-[#FFA500] mb-3 text-center text-sm">Isopentana</h4>
+                  <div class="bg-white rounded-xl p-3 flex justify-center items-end font-mono text-xs">
+                   <span>CH₃-</span>
+                   <div class="flex flex-col items-center">
+                       <span>CH₃</span>
+                       <span>|</span>
+                       <span>CH</span>
+                   </div>
+                   <span>-CH₂-CH₃</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-2 text-center">2-metilbutana<br>
+                   (4 C utama + 1 cabang)</p>
+                 </div>
+                 <div class="bg-[#7FD8BE]/10 rounded-2xl p-5">
+                  <h4 class="font-bold text-[#7FD8BE] mb-3 text-center text-sm">Neopentana</h4>
+                  <div class="bg-white rounded-xl p-3 text-center font-mono text-xs"><span class="block">CH₃</span> <span class="block">|</span> CH₃-C-CH₃<br><span class="block">|</span> <span class="block">CH₃</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-2 text-center">2,2-dimetilpropana<br>
+                   (3 C utama + 2 cabang)</p>
+                 </div>
+                </div>
+                <div class="mt-4 bg-[#7FD8BE]/20 rounded-xl p-4">
+                 <p class="text-sm text-gray-700 text-center"><strong>Semua punya rumus C₅H₁₂</strong> tetapi <strong>susunan rangka karbon berbeda</strong> → 3 Isomer Rangka ✓</p>
+                </div>
+               </div>
+
+               <!-- Cara Menentukan Isomer Alkana (Accordion) -->
+               <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+                 <div class="accordion-item bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+                    <div id="isomerStepsHeader" class="accordion-header bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('isomerStepsContent')">
+                     <h3 class="text-xl font-bold text-[#667eea] flex items-center gap-2">📝 Cara Menentukan Isomer Alkana</h3>
+                     <!-- Arrow points down by default (collapsed) -->
+                     <svg id="isomerStepsArrow" class="w-6 h-6 text-[#667eea] transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                    <!-- Added 'hidden' class to hide content by default -->
+                    <div id="isomerStepsContent" class="accordion-content hidden">
+                     <div class="p-5 space-y-4">
+                       <!-- Step 1 -->
+                       <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#667eea] shadow-sm hover:shadow-md transition-shadow">
+                         <div class="flex items-start gap-3">
+                           <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#667eea] text-white font-bold text-xs mt-0.5 shrink-0">1</span>
+                           <div>
+                             <p class="font-bold text-gray-800">Gambar Rantai Terpanjang</p>
+                             <p class="text-sm text-gray-600">Mulai dengan rantai karbon lurus (n-alkana)</p>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- Step 2 -->
+                       <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#764ba2] shadow-sm hover:shadow-md transition-shadow">
+                         <div class="flex items-start gap-3">
+                           <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#764ba2] text-white font-bold text-xs mt-0.5 shrink-0">2</span>
+                           <div>
+                             <p class="font-bold text-gray-800">Persingkat Rantai Induk, Tambahkan Cabang</p>
+                             <p class="text-sm text-gray-600">Kurangi 1 C dari rantai induk, jadikan cabang metil (-CH₃)</p>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- Step 3 -->
+                       <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#4ECDC4] shadow-sm hover:shadow-md transition-shadow">
+                         <div class="flex items-start gap-3">
+                           <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#4ECDC4] text-white font-bold text-xs mt-0.5 shrink-0">3</span>
+                           <div>
+                             <p class="font-bold text-gray-800">Geser Posisi Cabang</p>
+                             <p class="text-sm text-gray-600">Pindahkan cabang ke posisi berbeda (hindari duplikasi)</p>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- Step 4 -->
+                       <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#FFA500] shadow-sm hover:shadow-md transition-shadow">
+                         <div class="flex items-start gap-3">
+                           <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFA500] text-white font-bold text-xs mt-0.5 shrink-0">4</span>
+                           <div>
+                             <p class="font-bold text-gray-800">Tambahkan Cabang Lain</p>
+                             <p class="text-sm text-gray-600">Jika memungkinkan, persingkat rantai lagi, tambah cabang metil kedua, dst.</p>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- Step 5 -->
+                       <div class="bg-white rounded-xl p-4 pl-6 border-l-4 border-[#ff6363] shadow-sm hover:shadow-md transition-shadow">
+                         <div class="flex items-start gap-3">
+                           <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#ff6363] text-white font-bold text-xs mt-0.5 shrink-0">5</span>
+                           <div>
+                             <p class="font-bold text-gray-800">Pastikan Tidak Ada Struktur yang Sama</p>
+                             <p class="text-sm text-gray-600 mb-2">Periksa kembali, pastikan setiap isomer benar-benar berbeda</p>
+                             <!-- Note: Duplicate IUPAC Name -->
+                             <div class="bg-red-50 border border-red-100 p-2 rounded text-xs text-red-700 italic">
+                                <strong>📌 Note:</strong> Jika dua struktur memiliki nama IUPAC yang sama, maka mereka adalah isomer yang sama (duplikat). Satu nama hanya untuk satu struktur!
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       
+                       <!-- Video Section inside Accordion -->
+                       <div class="mt-6 border-t border-gray-100 pt-6">
+                         <div class="text-center mb-4">
+                           <h4 class="font-bold text-[#667eea] mb-2 flex items-center justify-center gap-2"><span class="text-xl">🎬</span> Masih bingung?</h4>
+                           <p class="text-sm text-gray-600">Yuk tonton video penjelasan langkah-langkah menentukan isomer ini!</p>
+                         </div>
+                         <div class="relative w-full pb-[56.25%] rounded-xl overflow-hidden shadow-md bg-gray-100 border border-gray-200">
+                           <iframe 
+                             class="absolute top-0 left-0 w-full h-full"
+                             src="https://www.youtube.com/embed/64Ns-OU0wnQ" 
+                             title="Cara Menentukan Isomer"
+                             frameborder="0" 
+                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                             allowfullscreen>
+                           </iframe>
+                         </div>
+                       </div>
+
+                     </div>
+                    </div>
+                 </div>
+               </div>
+
+               <!-- JUMLAH ISOMER ACCORDION -->
+               <div class="card-gradient rounded-3xl p-6 md:p-8 shadow-xl mb-6 hover-card">
+                 <div class="accordion-item bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+                    <div id="isomerCountHeader" class="accordion-header bg-gradient-to-r from-[#FFA500] to-[#FFD93D] p-4 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('isomerCountContent')">
+                     <h3 class="text-xl font-bold text-white flex items-center gap-2">📊 Jumlah Isomer Alkana</h3>
+                     <svg id="isomerCountArrow" class="w-6 h-6 text-white transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                    <div id="isomerCountContent" class="accordion-content hidden">
+                     <div class="p-5">
+                      <div class="overflow-x-auto">
+                       <table class="w-full text-sm min-w-[300px]">
+                        <thead>
+                         <tr class="bg-orange-100 text-orange-800">
+                          <th class="px-4 py-3 text-left">Alkana</th>
+                          <th class="px-4 py-3 text-center">Rumus</th>
+                          <th class="px-4 py-3 text-center">Jumlah Isomer</th>
+                         </tr>
+                        </thead>
+                        <tbody>
+                         <tr class="bg-orange-50/50 hover:bg-orange-100/50 transition-colors">
+                          <td class="px-4 py-3">Metana - Propana</td>
+                          <td class="px-4 py-3 text-center">C₁ - C₃</td>
+                          <td class="px-4 py-3 text-center font-bold">1</td>
+                         </tr>
+                         <tr class="bg-white hover:bg-orange-50/50 transition-colors border-t border-orange-50">
+                          <td class="px-4 py-3">Butana</td>
+                          <td class="px-4 py-3 text-center">C₄H₁₀</td>
+                          <td class="px-4 py-3 text-center font-bold">2</td>
+                         </tr>
+                         <tr class="bg-orange-50/50 hover:bg-orange-100/50 transition-colors border-t border-orange-50">
+                          <td class="px-4 py-3">Pentana</td>
+                          <td class="px-4 py-3 text-center">C₅H₁₂</td>
+                          <td class="px-4 py-3 text-center font-bold">3</td>
+                         </tr>
+                         <tr class="bg-white hover:bg-orange-100/50 transition-colors border-t border-orange-50">
+                          <td class="px-4 py-3">Heksana</td>
+                          <td class="px-4 py-3 text-center">C₆H₁₄</td>
+                          <td class="px-4 py-3 text-center font-bold">5</td>
+                         </tr>
+                         <tr class="bg-orange-50/50 hover:bg-orange-100/50 transition-colors border-t border-orange-50">
+                          <td class="px-4 py-3">Heptana</td>
+                          <td class="px-4 py-3 text-center">C₇H₁₆</td>
+                          <td class="px-4 py-3 text-center font-bold">9</td>
+                         </tr>
+                         <tr class="bg-white hover:bg-orange-100/50 transition-colors border-t border-orange-50">
+                          <td class="px-4 py-3">Oktana</td>
+                          <td class="px-4 py-3 text-center">C₈H₁₈</td>
+                          <td class="px-4 py-3 text-center font-bold">18</td>
+                         </tr>
+                         <tr class="bg-orange-50/50 hover:bg-orange-100/50 transition-colors border-t border-orange-50">
+                          <td class="px-4 py-3">Nonana</td>
+                          <td class="px-4 py-3 text-center">C₉H₂₀</td>
+                          <td class="px-4 py-3 text-center font-bold">35</td>
+                         </tr>
+                         <tr class="bg-white hover:bg-orange-100/50 transition-colors border-t border-orange-50">
+                          <td class="px-4 py-3">Dekana</td>
+                          <td class="px-4 py-3 text-center">C₁₀H₂₂</td>
+                          <td class="px-4 py-3 text-center font-bold">75</td>
+                         </tr>
+                        </tbody>
+                       </table>
+                      </div>
+                      <div class="mt-6 bg-[#7FD8BE]/20 rounded-xl p-4">
+                       <p class="text-gray-700 text-sm">💡 <strong>Fun Fact:</strong> Semakin panjang rantai karbon, semakin banyak kemungkinan isomer. C₃₀H₆₂ memiliki lebih dari 4 miliar isomer!</p>
+                      </div>
+                     </div>
+                    </div>
+                 </div>
+               </div>
+
+            <!-- Penjelasan Transisi ke Konteks BBM -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-6 shadow-lg border-l-4 border-[#667eea] relative overflow-hidden">
+              <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl pointer-events-none">🧐</div>
+              <p class="text-gray-700 text-sm leading-relaxed mb-2 text-justify relative z-10">
+                <span class="block text-xl font-extrabold bg-gradient-to-r from-[#667eea] to-[#FF6B6B] bg-clip-text text-transparent mb-2">✨ Satu Rumus Beda Struktur, Terbuktikan?</span>
+                Satu rumus molekul dapat membentuk struktur <strong>Lurus</strong> dan <strong>Bercabang</strong>. Perbedaan ini sangat krusial bagi kinerja mesin:
+              </p>
+              <ul class="mb-1 space-y-2 relative z-10 text-gray-700 text-sm ml-1">
+                <li class="flex gap-2 items-start"><span>✅</span> <span><strong>Struktur Bercabang:</strong> Menghasilkan pembakaran sempurna (Efisien).</span></li>
+                <li class="flex gap-2 items-start"><span>⚠️</span> <span><strong>Struktur Lurus:</strong> Pembakaran kurang sempurna (Risiko Tinggi).</span></li>
+              </ul>
+              <p class="text-gray-700 text-sm leading-relaxed mb-2 text-justify relative z-10 font-medium">
+                Mengapa struktur lurus berbahaya bagi mesin dan apa hubungannya dengan harga RON (90 vs 92)?
+              </p>
+              <p class="text-[#667eea] font-bold relative z-10 mt-2 text-sm text-center">Temukan jawabannya di sini: 👇</p>
+            </div>
+
+            <!-- Pop-up Button: Isu Sosial Saintifik Bensin -->
+               <div class="card-gradient rounded-3xl p-6 shadow-xl hover-card mb-6"><button onclick="openPopup('gasolinePopup')" class="w-full bg-gradient-to-r from-[#667eea] to-[#4ECDC4] rounded-2xl p-6 text-left hover:shadow-lg transition-all duration-300 group">
+                 <div class="flex items-center gap-4">
+                  <div class="text-5xl group-hover:scale-110 transition-transform">
+                   🚗
+                  </div>
+                  <div>
+                   <h3 class="text-xl font-bold text-white mt-2">Rahasia di Balik Angka Bensin SPBU ⛽</h3>
+                   <p class="text-white/80 text-sm mt-1">Mengapa Pertamax lebih mahal? Klik untuk tahu!</p>
+                  </div>
+                  <div class="ml-auto text-white text-2xl group-hover:translate-x-2 transition-transform">
+                   →
+                  </div>
+                 </div></button>
+               </div>
+
+            <!-- Kotak Pengambilan Keputusan (Accordion) -->
+            <div class="accordion-item bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-3xl shadow-xl mb-6 hover-card overflow-hidden">
+              <div id="decisionAccordionHeader" class="accordion-header p-6 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('decisionAccordionContent')">
+                <h3 class="text-xl font-bold text-green-700 flex items-center gap-2 relative z-10">
+                  🤔 Saatnya Memilih!
+                </h3>
+                <svg id="decisionAccordionArrow" class="w-6 h-6 text-green-700 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </div>
+              
+              <div id="decisionAccordionContent" class="accordion-content hidden">
+                <div class="p-6 pt-0 relative z-10 space-y-4">
+                  <div class="absolute top-0 right-0 opacity-10 transform translate-x-4 -translate-y-4 pointer-events-none">
+                    <svg width="150" height="150" viewBox="0 0 24 24" fill="currentColor" class="text-green-600">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                  </div>
+                  <p class="text-gray-700 leading-relaxed text-justify relative z-10">
+                    Motor matic yang kamu gunakan memiliki mesin berkompresi tinggi yang secara teknis membutuhkan asupan <strong>RON 92 (Struktur Bercabang)</strong>. Namun, melihat sisa uang saku yang menipis, kamu dihadapkan pada benturan antara kebutuhan mesin dan realita dompet.
+                  </p>
+                  <p class="font-bold text-gray-800 relative z-10 text-center">Strategi prioritas apa yang kamu ambil?</p>
+                  <div class="space-y-3 relative z-10">
+                    <div>
+                        <button onclick="toggleAnalysis('analysisA')" class="w-full text-left bg-white p-4 rounded-xl shadow-sm border-l-4 border-yellow-400 hover:bg-yellow-50 transition-colors font-bold text-gray-800 flex justify-between items-center group">
+                            <span>🔘 Opsi A: Pilih Pertalite</span>
+                            <span class="text-xs text-gray-400 font-normal group-hover:text-yellow-600">Klik untuk analisis 👇</span>
+                        </button>
+                        <div id="analysisA" class="hidden bg-yellow-50/80 p-4 rounded-b-xl text-sm border border-yellow-200 mt-1">
+                            <p class="font-bold text-gray-800 mb-2 underline decoration-yellow-400">Analisis Dampak:</p>
+                            <ul class="space-y-2 mb-3 text-gray-700">
+                                <li><strong>Sisi Ekonomi:</strong> ✅ Efisien. Pengeluaran harianmu aman terkendali.</li>
+                                <li><strong>Sisi Teknis:</strong> ⚠️ Berisiko. Dominasi struktur rantai lurus (n-heptana) akan mudah terbakar sendiri (pre-ignition) akibat tekanan mesin.</li>
+                            </ul>
+                            <div class="bg-white/60 p-2 rounded-lg border border-yellow-100">
+                                <p class="text-gray-800 text-xs text-center"><strong>Konsekuensi:</strong> Jika dilakukan terus-menerus, knocking halus akan merusak piston.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="toggleAnalysis('analysisB')" class="w-full text-left bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 hover:bg-blue-50 transition-colors font-bold text-gray-800 flex justify-between items-center group">
+                            <span>🔘 Opsi B: Pilih Pertamax</span>
+                            <span class="text-xs text-gray-400 font-normal group-hover:text-blue-600">Klik untuk analisis 👇</span>
+                        </button>
+                        <div id="analysisB" class="hidden bg-blue-50/80 p-4 rounded-b-xl text-sm border border-blue-200 mt-1">
+                            <p class="font-bold text-gray-800 mb-2 underline decoration-blue-400">Analisis Dampak:</p>
+                            <ul class="space-y-2 mb-3 text-gray-700">
+                                <li><strong>Sisi Teknis:</strong> ✅ Ideal. Dominasi struktur rantai bercabang (isooktana) tahan terhadap tekanan tinggi, menghasilkan pembakaran sempurna dan mesin awet.</li>
+                                <li><strong>Sisi Ekonomi:</strong> ⚠️ Berat. Biaya operasional meningkat.</li>
+                            </ul>
+                            <div class="bg-white/60 p-2 rounded-lg border border-blue-100">
+                                <p class="text-gray-800 text-xs text-center"><strong>Konsekuensi:</strong> Kamu harus disiplin memangkas anggaran jajan demi kesehatan mesin.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="toggleAnalysis('analysisC')" class="w-full text-left bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500 hover:bg-purple-50 transition-colors font-bold text-gray-800 flex justify-between items-center group">
+                            <span>🔘 Opsi C: Coba Gonta-Ganti</span>
+                            <span class="text-xs text-gray-400 font-normal group-hover:text-purple-600">Klik untuk analisis 👇</span>
+                        </button>
+                        <div id="analysisC" class="hidden bg-purple-50/80 p-4 rounded-b-xl text-sm border border-purple-200 mt-1">
+                            <p class="font-bold text-gray-800 mb-2 underline decoration-purple-400">Analisis Dampak:</p>
+                            <ul class="space-y-2 mb-3 text-gray-700">
+                                <li><strong>Sisi Ekonomi:</strong> ⚠️ Efisiensi Semu. Strategi seling (Misal: Minggu ini Pertalite, minggu depan Pertamax) memang terasa irit sesaat. Namun, ini berisiko menimbulkan biaya servis besar di kemudian hari.</li>
+                                <li><strong>Sisi Teknis:</strong> ❌ Konflik Kimia. Mencampur sisa bensin lama dengan jenis baru memicu ketidakcocokan zat aditif. Selain itu, sensor mesin (ECU) akan "bingung" menentukan waktu pengapian karena kualitas bahan bakar berubah-ubah.</li>
+                            </ul>
+                            <div class="bg-white/60 p-2 rounded-lg border border-purple-100">
+                                <p class="text-gray-800 text-xs text-center"><strong>Konsekuensi:</strong> Munculnya endapan (gum) yang menyumbat injektor, tarikan motor tersendat (brebet), dan performa mesin menjadi tidak stabil.</p>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- POPUPS --> 
+  
+  <!-- POPUP: Tabung Gas -->
+  <div id="energyPopup" class="popup-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="popup-content bg-white rounded-3xl max-w-2xl w-full max-h-[90%] overflow-auto shadow-2xl">
+      <div class="bg-gradient-to-r from-[#FFA500] to-[#FFD93D] p-6 rounded-t-3xl">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-4">
+            <div class="text-5xl">🔥</div>
+            <div><h2 class="text-xl md:text-2xl font-bold text-white">Misteri Bunyi Cair dalam Tabung Gas</h2></div>
+          </div><button onclick="closePopup('energyPopup')" class="text-white/80 hover:text-white text-3xl">×</button>
+        </div>
+      </div>
+      <div class="p-6 md:p-8">
+        <div class="flex justify-center mb-6">
+          <div class="relative">
+            <svg width="120" height="150" viewbox="0 0 120 150"><ellipse cx="60" cy="130" rx="45" ry="15" fill="#e74c3c" /> <rect x="15" y="40" width="90" height="90" rx="10" fill="#e74c3c" /> <ellipse cx="60" cy="40" rx="45" ry="15" fill="#c0392b" /> <rect x="45" y="15" width="30" height="30" rx="5" fill="#95a5a6" /> <circle cx="60" cy="25" r="8" fill="#7f8c8d" /> <text x="60" y="95" text-anchor="middle" fill="white" font-size="24" font-weight="bold">3kg</text></svg>
+            <div class="absolute -right-4 top-1/2 transform -translate-y-1/2 animate-bounce"><span class="text-2xl">💧</span></div>
+          </div>
+        </div>
+        <div class="bg-[#FFA500]/10 rounded-2xl p-6 mb-6">
+          <p class="text-gray-700 leading-relaxed text-lg">Pernahkah kamu menggoyangkan <strong>tabung gas LPG</strong> dan mendengar bunyi <em>"byur-byur"</em> seperti ada cairan di dalamnya? 🤔</p>
+        </div>
+        <div class="bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 rounded-2xl p-6 mb-6">
+          <h3 class="font-bold text-[#667eea] mb-4 flex items-center gap-2">🧪 Penjelasan Ilmiah</h3>
+          <p class="text-gray-700 mb-3">Tabung gas LPG berisi campuran <strong>propana (C₃H₈)</strong> and <strong>butana (C₄H₁₀)</strong>. Pada suhu ruang, kedua senyawa ini seharusnya <span class="bg-[#667eea]/20 px-2 py-1 rounded font-semibold">berwujud gas</span> karena titik didihnya sangat rendah:</p>
+          <ul class="ml-5 space-y-2 text-gray-700">
+            <li class="list-disc"><span class="font-semibold text-[#667eea]">Propana:</span> Titik didih -42°C</li>
+            <li class="list-disc"><span class="font-semibold text-[#667eea]">Butana:</span> Titik didih -0.5°C</li>
+          </ul>
+          <div class="mt-4 bg-white/60 p-3 rounded-lg border border-[#667eea]/20">
+            <p class="text-gray-700 text-sm">👃 Gas LPG aslinya tidak berbau, namun diberi tambahan zat berbau tajam (Mercaptan) agar kebocoran mudah dideteksi demi keselamatan.</p>
+          </div>
+        </div>
+        <div class="bg-[#7FD8BE]/10 rounded-2xl p-6 mb-6">
+          <h3 class="font-bold text-[#7FD8BE] mb-4 flex items-center gap-2">💡 Mengapa Berwujud Cair?</h3>
+          <p class="text-gray-700 leading-relaxed mb-3">Propana dan butana <strong>dikemas dalam tekanan tinggi</strong> (sekitar 8-10 bar) di dalam tabung. Tekanan ini memaksa molekul-molekul gas untuk saling berdekatan hingga <span class="bg-[#7FD8BE]/30 px-2 py-1 rounded font-semibold">mengembun menjadi cairan</span>.</p>
+          <p class="text-gray-600 italic text-sm">Ini seperti air yang dipaksa masuk ke dalam botol kecil dengan tekanan tinggi!</p>
+        </div>
+        <div class="bg-[#FFD93D]/10 rounded-2xl p-6 mb-6">
+          <h3 class="font-bold text-[#FFA500] mb-4 flex items-center gap-2">⚡ Apa yang Terjadi Saat Kompor Menyala?</h3>
+          <ol class="space-y-3 ml-2">
+            <li class="flex gap-3"><span class="bg-[#FFA500] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">1</span><span class="text-gray-700">Ketika regulator dibuka, tekanan di dalam tabung berkurang</span></li>
+            <li class="flex gap-3"><span class="bg-[#FFA500] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">2</span><span class="text-gray-700">Cairan LPG <strong>menguap</strong> kembali menjadi gas karena tekanan turun</span></li>
+            <li class="flex gap-3"><span class="bg-[#FFA500] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">3</span><span class="text-gray-700">Gas mengalir melalui selang menuju kompor</span></li>
+            <li class="flex gap-3"><span class="bg-[#FFA500] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">4</span><span class="text-gray-700">Gas terbakar menghasilkan energi panas untuk memasak</span></li>
+          </ol>
+        </div>
+        <div class="bg-gradient-to-r from-[#4ECDC4]/10 to-[#44A8FF]/10 rounded-2xl p-6 mb-6">
+          <h3 class="font-bold text-[#44A8FF] mb-4 flex items-center gap-2">🔬 Kesimpulan</h3>
+          <p class="text-gray-700 leading-relaxed">Bunyi "byur-byur" yang kamu dengar adalah <strong>cairan LPG</strong> yang terbentuk akibat <strong>tekanan tinggi</strong> di dalam tabung. Ini adalah aplikasi nyata dari sifat fisik alkana dalam kehidupan sehari-hari!</p>
+        </div>
+        <div class="bg-[#ff6363]/10 border-l-4 border-[#ff6363] rounded-r-2xl p-6">
+          <h3 class="font-bold text-[#ff6363] mb-2 flex items-center gap-2">⚠️ Peringatan Keselamatan</h3>
+          <p class="text-gray-700"><strong>Jangan pernah membuka atau memodifikasi tabung gas sendiri.</strong> LPG sangat mudah terbakar dan bisa menyebabkan ledakan!</p>
+        </div>
+        <div class="mt-8 text-center"><button onclick="closePopup('energyPopup')" class="interactive-btn bg-gradient-to-r from-[#FFA500] to-[#FFD93D] text-white font-bold px-8 py-3 rounded-full shadow-lg"> Keren! Saya Paham 👍 </button></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- POPUP: Bahaya CO -->
+  <div id="coPopup" class="popup-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="popup-content bg-white rounded-3xl max-w-2xl w-full max-h-[90%] overflow-auto shadow-2xl">
+      <div class="bg-gradient-to-r from-[#ff6363] to-[#FFA500] p-6 rounded-t-3xl">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-4">
+            <div class="text-5xl">⚠️</div>
+            <div><h2 class="text-xl md:text-2xl font-bold text-white">Misteri Kematian dalam Mobil Tertutup</h2></div>
+          </div><button onclick="closePopup('coPopup')" class="text-white/80 hover:text-white text-3xl">×</button>
+        </div>
+      </div>
+      <div class="p-6 md:p-8">
+        <div class="flex justify-center mb-6">
+          <div class="relative">
+            <svg width="200" height="120" viewbox="0 0 200 120"><rect x="20" y="50" width="160" height="50" rx="10" fill="#34495e" /><rect x="40" y="30" width="120" height="30" rx="5" fill="#5dade2" /><circle cx="50" cy="100" r="15" fill="#2c3e50" /><circle cx="50" cy="100" r="8" fill="#95a5a6" /><circle cx="150" cy="100" r="15" fill="#2c3e50" /><circle cx="150" cy="100" r="8" fill="#95a5a6" /><ellipse cx="170" cy="90" rx="8" ry="5" fill="#7f8c8d" opacity="0.6" /><ellipse cx="180" cy="85" rx="10" ry="7" fill="#7f8c8d" opacity="0.4" /><ellipse cx="190" cy="80" rx="12" ry="9" fill="#7f8c8d" opacity="0.2" /></svg>
+            <div class="absolute top-0 right-0 animate-pulse"><span class="text-3xl">☠️</span></div>
+          </div>
+        </div>
+        <div class="bg-[#ff6363]/10 rounded-2xl p-6 mb-6 border-2 border-[#ff6363]">
+          <p class="text-gray-700 leading-relaxed text-lg"><strong class="text-[#ff6363]">Sering dengar berita orang meninggal karena tidur di dalam mobil menyala dengan kaca tertutup?</strong> 😱</p>
+          <p class="text-gray-600 mt-3">Pelakunya adalah <strong>reaksi kimia pembakaran tidak sempurna</strong>! Bukan kecelakaan biasa - ini tentang <strong>Karbon Monoksida (CO)</strong>.</p>
+        </div>
+        <div class="bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 rounded-2xl p-6 mb-6">
+          <h3 class="font-bold text-[#667eea] mb-4 flex items-center gap-2">🔬 Penjelasan Ilmiah</h3>
+          <div class="space-y-3">
+            <p class="text-gray-700"><strong>1.</strong> Saat mobil diam di ruang <strong>sempit/tertutup</strong>, knalpot terus mengeluarkan gas buang.</p>
+            <p class="text-gray-700"><strong>2.</strong> Lama-kelamaan, <span class="bg-[#ff6363]/20 px-2 py-1 rounded font-semibold">oksigen (O₂) di ruangan habis</span>.</p>
+            <p class="text-gray-700"><strong>3.</strong> Akibatnya, pembakaran alkana di mesin menjadi <strong>TIDAK SEMPURNA</strong>.</p>
+            <p class="text-gray-700"><strong>4.</strong> Bukan CO₂ yang keluar, tapi <span class="bg-[#ff6363]/30 px-2 py-1 rounded font-bold">gas Karbon Monoksida (CO)</span>.</p>
+          </div>
+          <div class="mt-4 bg-white rounded-xl p-4">
+            <p class="text-center font-mono text-sm text-gray-700 mb-2">Reaksi:</p>
+            <p class="text-center font-mono text-base text-[#ff6363] font-bold">2C₈H₁₈ + 17O₂ → 16CO + 18H₂O</p>
+            <p class="text-center text-xs text-gray-500 mt-2">(Oktana dalam bensin + oksigen terbatas)</p>
+          </div>
+        </div>
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-5 rounded-r-xl mb-6 shadow-sm">
+          <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">❓ Mengapa Gas Knalpot Bisa Masuk ke Kabin?</h4>
+          <p class="text-sm text-gray-700 leading-relaxed text-justify mb-2">"Kan mobilnya tertutup rapat?". Faktanya, saat mobil diam dalam waktu lama, gas buang dari knalpot bisa merambat masuk melalui celah-celah kecil di bawah dek mobil atau terhisap oleh sistem ventilasi AC.</p>
+          <p class="text-sm text-gray-700 leading-relaxed text-justify font-semibold">Tanpa aliran udara dari luar (karena mobil diam), gas beracun ini terjebak di dalam kabin and perlahan menggantikan oksigen yang kamu hirup.</p>
+        </div>
+        <div class="bg-gradient-to-r from-[#ff6363]/20 to-[#FFA500]/20 rounded-2xl p-6 mb-6 border-2 border-[#ff6363]">
+          <h3 class="font-bold text-[#ff6363] mb-4 flex items-center gap-2">☠️ Mengapa CO Sangat Berbahaya?</h3>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#ff6363] font-bold text-xl">•</span> <span><strong>Tidak berwarna, tidak berbau</strong> - Kamu tidak tahu sedang menghirupnya!</span></li>
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#ff6363] font-bold text-xl">•</span> <span><strong>Mengikat hemoglobin 200x lebih kuat dari O₂</strong> - Darah tidak bisa mengangkut oksigen</span></li>
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#ff6363] font-bold text-xl">•</span> <span><strong>Menyebabkan hipoksia</strong> - Otak dan jantung kekurangan oksigen</span></li>
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#ff6363] font-bold text-xl">•</span> <span><strong>Efek: Pusing → Pingsan → Koma → Kematian</strong></span></li>
+          </ul>
+        </div>
+        <div class="bg-[#7FD8BE]/10 rounded-2xl p-6">
+          <h3 class="font-bold text-[#4ECDC4] mb-4 flex items-center gap-2">✅ Cara Menghindari</h3>
+          <ul class="space-y-2 ml-6">
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#4ECDC4] font-bold">•</span> <span><strong>Jangan tidur di mobil menyala</strong> dengan kaca tertutup rapat!</span></li>
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#4ECDC4] font-bold">•</span> <span><strong>Pastikan ventilasi udara</strong> - Buka jendela sedikit untuk sirkulasi</span></li>
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#4ECDC4] font-bold">•</span> <span><strong>Hindari AC mobil di ruang tertutup</strong> (garasi) dalam waktu lama</span></li>
+            <li class="flex items-start gap-2 text-gray-700"><span class="text-[#4ECDC4] font-bold">•</span> <span><strong>Gunakan detektor CO</strong> di rumah/mobil untuk keamanan</span></li>
+          </ul>
+        </div>
+        <div class="mt-8 text-center"><button onclick="closePopup('coPopup')" class="interactive-btn bg-gradient-to-r from-[#ff6363] to-[#FFA500] text-white font-bold px-8 py-3 rounded-full shadow-lg"> Mengerti! Saya Akan Hati-hati 🙏 </button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP: Rahasia Bensin (Gasoline) -->
+  <div id="gasolinePopup" class="popup-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="popup-content bg-white rounded-3xl max-w-3xl w-full max-h-[90%] overflow-auto shadow-2xl">
+      <div class="bg-gradient-to-r from-[#4ECDC4] to-[#44A8FF] p-6 rounded-t-3xl sticky top-0 z-10">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-4">
+            <div class="text-4xl">⛽</div>
+            <div><h2 class="text-xl md:text-2xl font-bold text-white">Rahasia Isomer di Bensin Kendaraanmu!</h2><p class="text-white/80 text-sm">Hubungan Isomer dengan Kualitas Mesin</p></div>
+          </div><button onclick="closePopup('gasolinePopup')" class="text-white/80 hover:text-white text-3xl">×</button>
+        </div>
+      </div>
+      <div class="p-6 md:p-8 space-y-6">
+        <div class="bg-red-50 rounded-2xl p-5 border-l-4 border-red-400">
+          <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">🚗 Apa itu "Klotok-Klotok" pada Mesin?</h3>
+          <p class="text-sm text-gray-700 leading-relaxed mb-3">Pernahkah kamu mendengar suara <strong>"klotok-klotok"</strong> aneh dari mesin mobil, terutama saat menanjak atau akselerasi? Fenomena ini disebut <span class="bg-red-200 px-1 rounded font-semibold text-red-800">knocking</span> atau ketukan mesin.</p>
+          <div class="bg-white/60 rounded-lg p-3 text-sm text-gray-600"><strong>Penyebab:</strong> Bahan bakar terbakar <em>terlalu cepat atau tidak merata</em> di dalam silinder mesin, menciptakan gelombang tekanan yang saling bertabrakan. Ini merusak mesin dalam jangka panjang!</div>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-[#44A8FF] mb-4 flex items-center gap-2">🔬 Peran Isomer dalam Kualitas Bensin</h3>
+          <p class="text-sm text-gray-600 mb-4">Ternyata, <strong>jenis isomer oktana</strong> yang dominan dalam bensin sangat menentukan apakah mesin akan "klotok-klotok" atau tidak!</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-green-50 rounded-xl p-4 border-2 border-green-200 hover:shadow-lg transition-all">
+              <div class="flex justify-between items-start mb-2"><p class="font-bold text-green-700">✅ Isomer BAIK</p><span class="bg-green-200 text-green-800 text-xs px-2 py-1 rounded-full font-bold">Oktan 100</span></div>
+              <p class="font-bold text-gray-800 text-sm mb-2">Isooktana (2,2,4-trimetilpentana)</p>
+              <div class="bg-white p-2 rounded-lg mb-3 flex justify-center"><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-12%20202645.png?raw=true" alt="Struktur Isooktana" class="h-20 object-contain"></div>
+              <p class="text-xs text-gray-500 text-center mb-3">(Rantai bercabang)</p>
+              <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside"><li>Terbakar <strong>lambat dan merata</strong></li><li>Tidak menyebabkan knocking</li><li>Standar kualitas bensin tinggi</li></ul>
+            </div>
+            <div class="bg-red-50 rounded-xl p-4 border-2 border-red-200 hover:shadow-lg transition-all">
+              <div class="flex justify-between items-start mb-2"><p class="font-bold text-red-700">❌ Isomer BURUK</p><span class="bg-red-200 text-red-800 text-xs px-2 py-1 rounded-full font-bold">Oktan 0</span></div>
+              <p class="font-bold text-gray-800 text-sm mb-2">n-Heptana</p>
+              <div class="bg-white p-2 rounded-lg mb-3 flex justify-center items-center h-[96px]"><p class="font-mono text-xs md:text-sm text-center break-all">CH₃-CH₂-CH₂-CH₂-CH₂-CH₂-CH₃</p></div>
+              <p class="text-xs text-gray-500 text-center mb-3">(Rantai lurus)</p>
+              <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside"><li>Terbakar <strong>sangat cepat</strong></li><li>Menyebabkan knocking parah</li><li>Harus diminimalkan dalam bensin</li></ul>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-200">
+          <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">📊 Apa Arti Angka RON 90, 92, 98?</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>RON (Research Octane Number)</strong> adalah skala yang menunjukkan ketahanan bensin terhadap knocking. Semakin tinggi RON, semakin anti-knocking bensin tersebut.</p>
+          <div class="bg-white p-4 rounded-xl shadow-sm mb-4">
+            <h4 class="font-bold text-[#4ECDC4] text-sm mb-2">🧮 Cara Menghitung RON:</h4>
+            <p class="text-xs text-gray-600 mb-2">RON dihitung dari persentase isooktana dalam campuran standar isoktana + n-heptana:</p>
+            <div class="bg-gradient-to-r from-[#4ECDC4]/10 to-[#44A8FF]/10 p-3 rounded-lg text-center font-mono text-sm text-gray-800 font-bold border border-[#4ECDC4]/30">RON 92 = 92% Isooktana + 8% n-Heptana</div>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-green-100 p-3 rounded-lg"><p class="font-bold text-green-700 text-lg">RON 90</p><p class="text-xs font-bold text-gray-600">Pertalite</p></div>
+            <div class="bg-blue-100 p-3 rounded-lg"><p class="font-bold text-blue-700 text-lg">RON 92</p><p class="text-xs font-bold text-gray-600">Pertamax</p></div>
+            <div class="bg-red-100 p-3 rounded-lg"><p class="font-bold text-red-700 text-lg">RON 98</p><p class="text-xs font-bold text-gray-600">Pertamax Turbo</p></div>
+          </div>
+        </div>
+        <div class="bg-[#44A8FF]/10 rounded-2xl p-5 border-l-4 border-[#44A8FF]">
+          <h3 class="text-lg font-bold text-[#44A8FF] mb-3">🔧 Mengapa Isomer Bercabang Lebih Baik?</h3>
+          <ol class="list-decimal ml-4 space-y-2 text-sm text-gray-700"><li><strong>Molekul lebih kompak:</strong> Isomer bercabang memiliki bentuk 3D yang lebih rapat, membuat molekul lebih stabil.</li><li><strong>Pembakaran lebih terkontrol:</strong> Cabang menghalangi reaksi berantai yang terlalu cepat.</li><li><strong>Titik didih lebih rendah:</strong> Lebih mudah menguap and bercampur dengan udara secara merata.</li></ol>
+        </div>
+        <div class="bg-gradient-to-r from-[#FFA500]/20 to-[#FFD93D]/20 p-5 rounded-2xl text-center">
+          <h3 class="font-bold text-[#FFA500] mb-2">💡 Kesimpulan</h3>
+          <p class="text-sm text-gray-700 leading-relaxed">Jadi, angka RON di SPBU sebenarnya mencerminkan <strong>perbandingan isomer alkana</strong> dalam bensin! Semakin tinggi RON, semakin banyak <strong>isomer bercabang (seperti isooktana)</strong>, and semakin sedikit isomer lurus (seperti n-heptana). Inilah mengapa bensin RON tinggi lebih mahal - prosesnya lebih kompleks!</p>
+        </div>
+        <div class="text-center pt-2"><button onclick="closePopup('gasolinePopup')" class="interactive-btn bg-gradient-to-r from-[#4ECDC4] to-[#44A8FF] text-white font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">Jadi Tahu Deh! 👍</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW POPUP: Iso & Neo Prefix Detail -->
+  <div id="isoNeoPopup" class="popup-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="popup-content bg-white rounded-3xl max-w-xl w-full max-h-[90%] overflow-auto shadow-2xl border-t-8 border-indigo-500">
+      <div class="p-6">
+        <!-- JUDUL RATA TENGAH -->
+        <div class="relative mb-8 text-center">
+          <h3 class="text-xl font-bold text-indigo-700 inline-flex items-center gap-2">
+            <span class="bg-indigo-100 p-2 rounded-xl text-2xl">🧐</span>
+            Mengenal Awalan "Iso" dan "Neo"
+          </h3>
+          <button onclick="closePopup('isoNeoPopup')" class="absolute top-0 right-0 text-slate-400 hover:text-slate-600 text-2xl">×</button>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Iso Detail -->
+          <div class="bg-indigo-50 rounded-2xl p-5 border border-indigo-100">
+            <h4 class="font-black text-indigo-800 mb-2 flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-indigo-500 text-white text-xs flex items-center justify-center">1</span>
+              Awalan "Iso"
+            </h4>
+            <p class="text-sm text-slate-700 leading-relaxed mb-4">
+              Digunakan ketika terdapat <strong>satu gugus metil (−CH₃)</strong> yang terikat pada atom karbon nomor dua dari ujung rantai karbon induk.
+            </p>
+            <div class="bg-white p-4 rounded-xl border border-indigo-100 font-mono text-sm text-indigo-600 shadow-inner leading-none flex justify-center">
+              <div class="text-left">
+                <div class="whitespace-pre">           CH₃</div>
+                <div class="my-1 whitespace-pre">            |</div>
+                <div class="whitespace-pre">CH₃ - CH - CH₂ - R</div>
+              </div>
+            </div>
+            <p class="text-[11px] text-indigo-500 mt-2 italic font-medium text-center">Bentuk rantainya menyerupai huruf "Y" di ujung molekul.</p>
+          </div>
+
+          <!-- Neo Detail -->
+          <div class="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
+            <h4 class="font-black text-emerald-800 mb-2 flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-emerald-500 text-white text-xs flex items-center justify-center">2</span>
+              Awalan "Neo"
+            </h4>
+            <p class="text-sm text-slate-700 leading-relaxed mb-4">
+              Digunakan ketika terdapat <strong>dua gugus metil (−CH₃)</strong> yang terikat pada atom karbon nomor dua dari ujung rantai karbon induk.
+            </p>
+            <div class="bg-white p-4 rounded-xl border border-emerald-100 font-mono text-sm text-emerald-600 shadow-inner leading-none flex justify-center">
+              <div class="text-left">
+                <div class="whitespace-pre">          CH₃</div>
+                <div class="my-1 whitespace-pre">            |</div>
+                <div class="whitespace-pre">CH₃ - C - CH₂ - R</div>
+                <div class="my-1 whitespace-pre">            |</div>
+                <div class="whitespace-pre">          CH₃</div>
+              </div>
+            </div>
+            <p class="text-[11px] text-emerald-500 mt-2 leading-tight">
+              <strong>Catatan:</strong> Atom karbon ke-2 tersebut menjadi <strong>atom karbon kuartener</strong> (mengikat 4 atom C lain). Bentuk ini menyerupai tanda "+" di ujung molekul.
+            </p>
+          </div>
+
+          <!-- HIGHLIGHTED TRIVIAL NOTE -->
+          <div class="bg-amber-50 rounded-2xl p-4 border border-amber-100">
+            <p class="text-xs text-amber-800 font-medium leading-relaxed">
+              <strong>💡 Ingat:</strong> <span class="bg-yellow-300 px-1 py-0.5 rounded shadow-sm">Penamaan "iso" dan "neo" adalah nama umum (trivial).</span> Untuk nama ilmiah yang baku (IUPAC), kita menggunakan penomoran posisi cabang (seperti 2-metil... atau 2,2-dimetil...).
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-8 text-center">
+          <button onclick="closePopup('isoNeoPopup')" class="interactive-btn bg-indigo-600 text-white font-bold px-8 py-2.5 rounded-full shadow-lg">Tutup Detail</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const defaultConfig = { main_title: 'ALKANA' };
+    let config = { ...defaultConfig };
+    let currentTab = 0;
+    let sidebarCollapsed = window.innerWidth < 768;
+    const tabHeaders = [
+      { title: "Mengenal Senyawa Alkana", subtitle: "Dasar-dasar hidrokarbon jenuh" },
+      { title: "Tata Nama Alkana", subtitle: "Aturan penamaan IUPAC" },
+      { title: "Sifat Alkana", subtitle: "Sifat fisik dan kimia" },
+      { title: "Isomer Alkana", subtitle: "Struktur Berbeda, Rumus Sama" }
+    ];
+
+    function switchTab(index) {
+      currentTab = index;
+      const mainContent = document.getElementById('mainContent');
+      if (mainContent) mainContent.scrollTop = 0;
+      const headerTitle = document.getElementById('headerTitle');
+      const headerSubtitle = document.getElementById('headerSubtitle');
+      if (headerTitle && headerSubtitle && tabHeaders[index]) {
+        headerTitle.innerText = tabHeaders[index].title;
+        headerSubtitle.innerText = tabHeaders[index].subtitle;
+      }
+      for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`navBtn${i}`);
+        if (btn) btn.classList.toggle('active', i === index);
+      }
+      for (let i = 0; i < 4; i++) {
+        const tab = document.getElementById(`tab${i}`);
+        if (tab) {
+            tab.classList.toggle('active', i === index);
+            tab.classList.toggle('content-slide', i === index);
+        }
+      }
+      if (window.innerWidth < 768) {
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar.classList.contains('sidebar-collapsed')) toggleSidebar();
+      }
+    }
+    
+    function toggleAccordion(idOrIndex) {
+      let content = document.getElementById(`accordionContent${idOrIndex}`);
+      let icon = document.getElementById(`accordionIcon${idOrIndex}`);
+      if (!content) {
+        content = document.getElementById(idOrIndex);
+        if (typeof idOrIndex === 'string') {
+            if (idOrIndex.startsWith('tipAccordion')) icon = document.getElementById(`tipArrow${idOrIndex.replace('tipAccordion', '')}`);
+            else if (idOrIndex.startsWith('branchedAccordion')) icon = document.getElementById(`branchedArrow${idOrIndex.replace('branchedAccordion', '')}`);
+            else if (idOrIndex.startsWith('complexBranchedAccordion')) icon = document.getElementById(`complexBranchedArrow${idOrIndex.replace('complexBranchedAccordion', '')}`);
+            else if (idOrIndex === 'isomerAccordionContent') icon = document.getElementById('isomerAccordionArrow');
+            else if (idOrIndex === 'isomerStepsContent') icon = document.getElementById('isomerStepsArrow');
+            else if (idOrIndex === 'isomerCountContent') icon = document.getElementById('isomerCountArrow');
+            else if (idOrIndex === 'decisionAccordionContent') icon = document.getElementById('decisionAccordionArrow');
+        }
+      }
+      if (content) {
+        const isHidden = content.classList.contains('hidden');
+        content.classList.toggle('hidden');
+        if (icon) icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+      }
+    }
+    
+    let branchedStep = 0;
+    function resetBranchedExample() {
+        branchedStep = 0;
+        ['mainChainResult','numberingResult','branchIdentifyResult','finalNameBranchedResult'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        ['2','3','4'].forEach(n => document.getElementById(`branchedStep${n}Container`).classList.replace('opacity-100','opacity-50'));
+        [1,2,3,4].forEach(s => {
+            const content = document.getElementById(`branchedAccordion${s}`);
+            const icon = document.getElementById(`branchedArrow${s}`);
+            if (content) {
+                content.classList.toggle('hidden', s !== 1);
+                if (icon) icon.style.transform = s === 1 ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        });
+    }
+
+    function selectMainChain() {
+        document.getElementById('mainChainResult').classList.remove('hidden');
+        document.getElementById('branchedStep2Container').classList.replace('opacity-50', 'opacity-100');
+        document.getElementById('branchedStep2Container').classList.remove('pointer-events-none');
+        toggleAccordion('branchedAccordion2');
+        branchedStep = 1;
+    }
+
+    function numberFromLeft() {
+        if (branchedStep < 1) return;
+        const res = document.getElementById('numberingResult');
+        res.innerHTML = `<div class="flex flex-col items-center gap-2"><span>✅ Tepat! Cabang mendapat nomor <strong>2</strong>.</span><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-10%20154554.png?raw=true" class="max-w-full h-auto rounded-lg shadow-md mt-2" style="max-height: 120px;"></div>`;
+        res.classList.remove('hidden', 'text-red-500');
+        document.getElementById('branchedStep3Container').classList.replace('opacity-50', 'opacity-100');
+        document.getElementById('branchedStep3Container').classList.remove('pointer-events-none');
+        setTimeout(() => toggleAccordion('branchedAccordion3'), 2500);
+        branchedStep = 2;
+    }
+
+    function numberFromRight() {
+        const res = document.getElementById('numberingResult');
+        res.innerHTML = "❌ Kurang tepat. Cabang mendapat nomor 4. Cari yang lebih kecil!";
+        res.classList.remove('hidden');
+        res.classList.add('text-red-500');
+    }
+
+    function identifyBranch() {
+        if (branchedStep < 2) return;
+        document.getElementById('branchIdentifyResult').classList.remove('hidden');
+        document.getElementById('branchedStep4Container').classList.replace('opacity-50', 'opacity-100');
+        document.getElementById('branchedStep4Container').classList.remove('pointer-events-none');
+        setTimeout(() => toggleAccordion('branchedAccordion4'), 800);
+        branchedStep = 3;
+    }
+
+    function showFinalNameBranched() {
+        if (branchedStep < 3) return;
+        const container = document.getElementById('finalNameBranchedResult');
+        container.querySelector('p').innerText = "2-metilpentana";
+        container.classList.remove('hidden');
+    }
+
+    let complexBranchedStep = 0;
+    function resetComplexBranchedExample() {
+        complexBranchedStep = 0;
+        ['complexMainChainResult','complexNumberingResult','complexBranchIdentifyResult','finalNameComplexBranchedResult'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        ['2','3','4'].forEach(n => document.getElementById(`complexBranchedStep${n}Container`).classList.replace('opacity-100','opacity-50'));
+        [1,2,3,4].forEach(s => {
+            const content = document.getElementById(`complexBranchedAccordion${s}`);
+            const icon = document.getElementById(`complexBranchedArrow${s}`);
+            if (content) {
+                content.classList.toggle('hidden', s !== 1);
+                if (icon) icon.style.transform = s === 1 ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        });
+    }
+
+    function selectComplexMainChain() {
+        document.getElementById('complexMainChainResult').classList.remove('hidden');
+        document.getElementById('complexBranchedStep2Container').classList.replace('opacity-50', 'opacity-100');
+        document.getElementById('complexBranchedStep2Container').classList.remove('pointer-events-none');
+        toggleAccordion('complexBranchedAccordion2');
+        complexBranchedStep = 1;
+    }
+
+    function numberComplexFromLeft() {
+        if (complexBranchedStep < 1) return;
+        const res = document.getElementById('complexNumberingResult');
+        res.innerHTML = `<div class="flex flex-col items-center gap-2"><span>✅ Tepat! Cabang mendapat nomor <strong>3,4</strong>.</span><img src="https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/de37ff8b6af9c0576fcf1bdfd64d23d5bc6bc887/Screenshot%202026-01-10%20154743.png?raw=true" class="max-w-full h-auto rounded-lg shadow-md mt-2" style="max-height: 120px;"></div>`;
+        res.classList.remove('hidden', 'text-red-500');
+        document.getElementById('complexBranchedStep3Container').classList.replace('opacity-50', 'opacity-100');
+        document.getElementById('complexBranchedStep3Container').classList.remove('pointer-events-none');
+        setTimeout(() => toggleAccordion('complexBranchedAccordion3'), 2500);
+        complexBranchedStep = 2;
+    }
+
+    function numberComplexFromRight() {
+        const res = document.getElementById('complexNumberingResult');
+        res.innerHTML = "⚠️ Penomoran boleh dari kanan atau kiri, tetapi pada contoh ini, dipilih dari kiri ya. Klik tombol 'Dari Kiri'.";
+        res.classList.remove('hidden');
+        res.classList.add('text-red-500');
+    }
+
+    function identifyComplexBranch() {
+        if (complexBranchedStep < 2) return;
+        document.getElementById('complexBranchIdentifyResult').classList.remove('hidden');
+        document.getElementById('complexBranchedStep4Container').classList.replace('opacity-50', 'opacity-100');
+        document.getElementById('complexBranchedStep4Container').classList.remove('pointer-events-none');
+        setTimeout(() => toggleAccordion('complexBranchedAccordion4'), 800);
+        complexBranchedStep = 3;
+    }
+
+    function showFinalNameComplexBranched() {
+        if (complexBranchedStep < 3) return;
+        const container = document.getElementById('finalNameComplexBranchedResult');
+        container.querySelector('p').innerText = "3,4-dimetilheksana";
+        container.classList.remove('hidden');
+    }
+
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-collapsed'); }
+    function openPopup(id) { 
+        const p = document.getElementById(id);
+        p.classList.remove('hidden'); p.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+    function closePopup(id) { 
+        const p = document.getElementById(id);
+        p.classList.add('hidden'); p.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+    document.querySelectorAll('.popup-overlay').forEach(o => o.addEventListener('click', (e) => { if (e.target === o) closePopup(o.id); }));
+    function toggleAnalysis(id) {
+        const el = document.getElementById(id);
+        if(el) el.classList.toggle('hidden');
+    }
+  </script>
+ </body>
+</html>
