@@ -377,6 +377,11 @@
       <span id="music-icon" class="text-xl sm:text-2xl">🔇</span>
    </button>
 
+   <!-- Fullscreen Toggle (Global) -->
+   <button id="fullscreen-toggle" onclick="toggleFullScreen()" class="fixed top-3 right-16 sm:top-4 sm:right-24 z-[60] btn-futuristic p-2 sm:p-3 rounded-full text-cyan-400 active:scale-95 transition-transform shadow-lg shadow-cyan-500/20 bg-black/50 backdrop-blur-sm mr-2" aria-label="Toggle Fullscreen">
+      <span id="fullscreen-icon" class="text-xl sm:text-2xl">⛶</span>
+   </button>
+
    <!-- Dashboard Screen -->
    <div id="dashboard-screen" class="w-full h-full flex flex-col items-center justify-center relative overflow-hidden hexagon-bg" style="background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f0f2e 100%);">
     
@@ -1114,6 +1119,32 @@
         initAudio();
         musicSystem.toggle();
     }
+
+    // --- FULLSCREEN TOGGLE ---
+    function toggleFullScreen() {
+        const btn = document.getElementById('fullscreen-icon');
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.warn("Fullscreen error:", err);
+            });
+            if(btn) btn.textContent = '↙️'; // Exit icon
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                if(btn) btn.textContent = '⛶'; // Enter icon
+            }
+        }
+    }
+
+    // Listen for fullscreen change events to update icon if user uses Esc key
+    document.addEventListener('fullscreenchange', () => {
+        const btn = document.getElementById('fullscreen-icon');
+        if (document.fullscreenElement) {
+            if(btn) btn.textContent = '↙️';
+        } else {
+            if(btn) btn.textContent = '⛶';
+        }
+    });
 
     function playLaserSound() {
         if (!audioCtx) initAudio();
