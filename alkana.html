@@ -1296,7 +1296,7 @@
               
               <!-- Kalimat Pengantar Sifat Kimia (Baru) -->
               <p class="text-gray-700 leading-relaxed mb-6 text-justify">
-                Sifat kimia alkana ditentukan oleh ikatan tunggalnya yang stabil and jenuh. Hal ini membuat alkana cenderung sulit bereaksi (parafin), kecuali melalui beberapa reaksi berikut ini:
+                Sifat kimia alkana ditentukan oleh ikatan tunggalnya yang stabil dan jenuh. Hal ini membuat alkana cenderung sulit bereaksi (parafin), kecuali melalui beberapa reaksi berikut ini:
               </p>
 
               <!-- Reaksi Pembakaran -->
@@ -1313,7 +1313,7 @@
                     <p class="text-center font-mono text-sm md:text-base text-gray-800 bg-blue-50 rounded-lg p-3">CH₄ + 2O₂ → CO₂ + 2H₂O + Panas</p>
                   </div>
                   <div class="bg-[#7FD8BE]/20 rounded-lg p-3">
-                    <p class="text-sm text-gray-700"><strong>💡 Manfaat:</strong> Ini adalah reaksi yang terjadi di kompor gas, mesin kendaraan, and pembangkit listrik!</p>
+                    <p class="text-sm text-gray-700"><strong>💡 Manfaat:</strong> Ini adalah reaksi yang terjadi di kompor gas, mesin kendaraan, dan pembangkit listrik!</p>
                   </div>
                 </div>
                 <!-- Pembakaran Tidak Sempurna -->
@@ -1470,6 +1470,7 @@
                    CH₃ - CH₂ - CH₂ - CH₃
                   </div>
                   <p class="text-sm text-gray-600 mt-3 text-center">Rantai lurus (4 C berurutan)</p>
+                  <p class="text-xs text-blue-600 font-bold mt-2 text-center bg-blue-50 py-1 rounded">Titik Didih: -0.5°C</p>
                  </div>
                  <div class="bg-[#764ba2]/10 rounded-2xl p-6 relative">
                   <!-- INFO BUTTON with PULSE effect -->
@@ -1483,10 +1484,12 @@
                   <div class="bg-white rounded-xl p-4 text-center font-mono"><span class="block">CH₃</span> <span class="block">|</span> CH₃ - CH - CH₃
                   </div>
                   <p class="text-sm text-gray-600 mt-3 text-center">Rantai bercabang (3 C utama + 1 cabang)</p>
+                  <p class="text-xs text-blue-600 font-bold mt-2 text-center bg-blue-50 py-1 rounded">Titik Didih: -11.7°C</p>
                  </div>
                 </div>
                 <div class="mt-4 bg-[#FFD93D]/20 rounded-xl p-4">
-                 <p class="text-sm text-gray-700 text-center"><strong>Rumus molekul sama:</strong> C₄H₁₀ | <strong>Struktur rangka berbeda</strong> → Isomer Rangka ✓</p>
+                 <p class="text-sm text-gray-700 text-center mb-1"><strong>Rumus molekul sama:</strong> C₄H₁₀ | <strong>Struktur rangka berbeda</strong> → Isomer Rangka ✓</p>
+                 <p class="text-xs text-center font-bold text-red-600 bg-white/50 py-1 rounded border border-red-200">✨ Kesimpulan: Mempunyai sifat-sifat fisika dan kimia yang berbeda pula</p>
                 </div>
                </div>
 
@@ -1500,6 +1503,7 @@
                    CH₃-CH₂-CH₂-CH₂-CH₃
                   </div>
                   <p class="text-xs text-gray-500 mt-2 text-center">Rantai lurus (5 C)</p>
+                  <p class="text-xs text-blue-600 font-bold mt-2 text-center bg-blue-50 py-1 rounded">Td: 36°C</p>
                  </div>
                  <div class="bg-[#FFD93D]/10 rounded-2xl p-5">
                   <h4 class="font-bold text-[#FFA500] mb-3 text-center text-sm">Isopentana</h4>
@@ -1514,6 +1518,7 @@
                   </div>
                   <p class="text-xs text-gray-500 mt-2 text-center">2-metilbutana<br>
                    (4 C utama + 1 cabang)</p>
+                  <p class="text-xs text-blue-600 font-bold mt-2 text-center bg-blue-50 py-1 rounded">Td: 28°C</p>
                  </div>
                  <div class="bg-[#7FD8BE]/10 rounded-2xl p-5">
                   <h4 class="font-bold text-[#7FD8BE] mb-3 text-center text-sm">Neopentana</h4>
@@ -1521,10 +1526,12 @@
                   </div>
                   <p class="text-xs text-gray-500 mt-2 text-center">2,2-dimetilpropana<br>
                    (3 C utama + 2 cabang)</p>
+                  <p class="text-xs text-blue-600 font-bold mt-2 text-center bg-blue-50 py-1 rounded">Td: 9.5°C</p>
                  </div>
                 </div>
                 <div class="mt-4 bg-[#7FD8BE]/20 rounded-xl p-4">
-                 <p class="text-sm text-gray-700 text-center"><strong>Semua punya rumus C₅H₁₂</strong> tetapi <strong>susunan rangka karbon berbeda</strong> → 3 Isomer Rangka ✓</p>
+                 <p class="text-sm text-gray-700 text-center mb-1"><strong>Semua punya rumus C₅H₁₂</strong> tetapi <strong>susunan rangka karbon berbeda</strong> → 3 Isomer Rangka ✓</p>
+                 <p class="text-xs text-center font-bold text-red-600 bg-white/50 py-1 rounded border border-red-200">✨ Kesimpulan: Mempunyai sifat-sifat fisika dan kimia yang berbeda pula</p>
                 </div>
                </div>
 
@@ -2063,6 +2070,14 @@
     const defaultConfig = { main_title: 'ALKANA' };
     let config = { ...defaultConfig };
     let currentTab = 0;
+    
+    // PRELOAD IMAGES untuk responsivitas instan
+    const feedbackImages = [
+        "https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/main/Screenshot%202026-01-10%20154554.png?raw=true",
+        "https://github.com/auliaputriindah06-crypto/mpihidrokarbon/blob/de37ff8b6af9c0576fcf1bdfd64d23d5bc6bc887/Screenshot%202026-01-10%20154743.png?raw=true"
+    ];
+    feedbackImages.forEach(src => { const img = new Image(); img.src = src; });
+
     let sidebarCollapsed = window.innerWidth < 768;
     const tabHeaders = [
       { title: "Mengenal Senyawa Alkana", subtitle: "Dasar-dasar hidrokarbon jenuh" },
@@ -2151,7 +2166,7 @@
         res.classList.remove('hidden', 'text-red-500');
         document.getElementById('branchedStep3Container').classList.replace('opacity-50', 'opacity-100');
         document.getElementById('branchedStep3Container').classList.remove('pointer-events-none');
-        setTimeout(() => toggleAccordion('branchedAccordion3'), 2500);
+        setTimeout(() => toggleAccordion('branchedAccordion3'), 100); // Dipercepat menjadi 100ms
         branchedStep = 2;
     }
 
@@ -2210,7 +2225,7 @@
         res.classList.remove('hidden', 'text-red-500');
         document.getElementById('complexBranchedStep3Container').classList.replace('opacity-50', 'opacity-100');
         document.getElementById('complexBranchedStep3Container').classList.remove('pointer-events-none');
-        setTimeout(() => toggleAccordion('complexBranchedAccordion3'), 2500);
+        setTimeout(() => toggleAccordion('complexBranchedAccordion3'), 100); // Dipercepat menjadi 100ms
         complexBranchedStep = 2;
     }
 
